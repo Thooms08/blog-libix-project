@@ -39,7 +39,9 @@ $csrfToken = $auth->generateCsrfToken();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login  |  Flavory.id</title>
 
-    <link rel="icon" href="data:,">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo.png">
+    <link rel="apple-touch-icon" href="/assets/logo.png">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
