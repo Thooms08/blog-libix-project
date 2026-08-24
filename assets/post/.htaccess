@@ -1,0 +1,25 @@
+# Folder upload gambar — hanya izinkan akses ke file gambar
+# Blokir semua eksekusi script untuk mencegah web shell
+
+# Blokir eksekusi PHP & script apapun
+<FilesMatch "\.(php\d*|phtml|phar|cgi|pl|py|rb|sh|bash)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Hanya izinkan akses ke ekstensi gambar yang dikenal
+<FilesMatch "\.(jpe?g|png|gif|webp|avif|svg)$">
+    Allow from all
+</FilesMatch>
+
+# Blokir semua request yang tidak cocok pattern di atas
+# (file tanpa ekstensi, .htaccess, dll)
+<FilesMatch "^(?!.*\.(jpe?g|png|gif|webp|avif|svg)$).*$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Paksa content-type untuk mencegah MIME sniffing
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>

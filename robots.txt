@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Jangan indeks area admin
+Disallow: /Admin/
+Disallow: /Logic/
+Disallow: /layouts/
+Disallow: /partials/
+Disallow: /assets/post/
+
+# Jangan indeks query string utility (filter kategori masih boleh diindeks via canonical)
+Disallow: /*?page=*
+Disallow: /login
+Disallow: /submit-review.php
+
+# Crawl-delay untuk bot yang patuh
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://blog.flavory.id/sitemap.xml

@@ -1,0 +1,92 @@
+RewriteEngine On
+RewriteBase /
+
+# ════════════════════════════════════════════════════════════════════════════════
+#  BLOKIR FILE SENSITIF — harus di posisi PALING ATAS agar tidak di-bypass
+#  oleh rule "sajikan file yang ada" di bawah.
+# ════════════════════════════════════════════════════════════════════════════════
+
+# ── 1. Blokir semua dotfile (.env, .gitignore, .htaccess, dll) ───────────────
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ── 2. Blokir file sensitif berdasarkan ekstensi / nama ─────────────────────
+<FilesMatch "\.(env|sql|log|bak|backup|sh|bash|conf|ini|lock|pem|key|cert|crt|p12|pfx)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ── 3. Blokir file JS/JSON yang tidak boleh diakses publik ───────────────────
+#    (loading.js, package.json, composer.json, dll di root)
+#    File JS di /assets/ tetap bisa diakses karena Apache tidak kena rule ini
+#    — rule ini hanya berlaku di direktori di mana .htaccess ini berada (root).
+<FilesMatch "\.(js|json|ts|jsx|tsx|vue)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ── 4. Blokir akses ke folder Logic, layouts, partials, dan Admin/partials ───
+RewriteRule ^Logic/           - [F,L]
+RewriteRule ^layouts/         - [F,L]
+RewriteRule ^partials/        - [F,L]
+RewriteRule ^Admin/partials/  - [F,L]
+
+# ── 5. Blokir config.php, router.php, dan sitemap.php dari akses langsung ────
+#    sitemap.php hanya boleh diakses via rewrite /sitemap.xml di bawah.
+<FilesMatch "^(config|router|sitemap)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ════════════════════════════════════════════════════════════════════════════════
+#  ROUTING — berjalan setelah semua file sensitif terblokir
+# ════════════════════════════════════════════════════════════════════════════════
+
+# ── 6. robots.txt dan sitemap.xml — izinkan eksplisit sebelum rule statis ────
+RewriteRule ^robots\.txt$  robots.txt  [L]
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+# ── 7. Sajikan file statis yang BOLEH diakses (css, gambar di /assets, dll) ──
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ── 7b. Routing API: /api/{endpoint} → api/{endpoint}.php ───────────────────
+#    Harus sebelum rule statis agar tidak diblokir oleh FilesMatch JS/JSON di atas.
+RewriteRule ^api/([a-zA-Z0-9_\-]+)/?$ api/$1.php [L,QSA]
+
+# ── 8. Routing artikel: /post/{slug} → blog.php ──────────────────────────────
+RewriteRule ^post/([a-zA-Z0-9_-]+)/?$ blog.php?slug=$1 [L,QSA]
+
+# ── 8b. Routing kategori: /kategori/{slug} → index.php ───────────────────────
+RewriteRule ^kategori/([a-zA-Z0-9_-]+)/?$ index.php?kat=$1 [L,QSA]
+
+# ── 9. Routing URL tanpa ekstensi .php (mendukung subdirektori) ──────────────
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^([^.]+)/?$ $1.php [NC,L]
+
+# ════════════════════════════════════════════════════════════════════════════════
+#  SECURITY HEADERS
+# ════════════════════════════════════════════════════════════════════════════════
+
+# ── 9. HTTP Security Headers ──────────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options  "nosniff"
+    Header always set X-Frame-Options          "SAMEORIGIN"
+    Header always set X-XSS-Protection         "1; mode=block"
+    Header always set Referrer-Policy          "strict-origin-when-cross-origin"
+    # Aktifkan baris ini setelah deploy ke HTTPS:
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    Header unset X-Powered-By
+    Header always unset X-Powered-By
+</IfModule>
+
+# ── 10. Sembunyikan versi PHP ─────────────────────────────────────────────────
+<IfModule mod_php.c>
+    php_flag expose_php off
+</IfModule>
+
+# ── 11. Paksa charset UTF-8 ───────────────────────────────────────────────────
+AddDefaultCharset UTF-8
