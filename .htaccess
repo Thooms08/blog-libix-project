@@ -40,13 +40,21 @@ RewriteRule ^Admin/partials/  - [F,L]
     Deny from all
 </FilesMatch>
 
+# ── 5b. Izinkan eksplisit file PWA / manifest & error handler ────────────────
+<FilesMatch "^(site\.webmanifest|browserconfig\.xml|error\.php)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
 # ════════════════════════════════════════════════════════════════════════════════
 #  ROUTING — berjalan setelah semua file sensitif terblokir
 # ════════════════════════════════════════════════════════════════════════════════
 
 # ── 6. robots.txt dan sitemap.xml — izinkan eksplisit sebelum rule statis ────
-RewriteRule ^robots\.txt$  robots.txt  [L]
-RewriteRule ^sitemap\.xml$ sitemap.php [L]
+RewriteRule ^robots\.txt$      robots.txt       [L]
+RewriteRule ^sitemap\.xml$     sitemap.php      [L]
+RewriteRule ^site\.webmanifest$ site.webmanifest [L]
+RewriteRule ^browserconfig\.xml$ browserconfig.xml [L]
 
 # ── 7. Sajikan file statis yang BOLEH diakses (css, gambar di /assets, dll) ──
 RewriteCond %{REQUEST_FILENAME} -f [OR]
@@ -77,10 +85,19 @@ RewriteRule ^([^.]+)/?$ $1.php [NC,L]
     Header always set X-Frame-Options          "SAMEORIGIN"
     Header always set X-XSS-Protection         "1; mode=block"
     Header always set Referrer-Policy          "strict-origin-when-cross-origin"
-    # Aktifkan baris ini setelah deploy ke HTTPS:
-    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    Header always set Permissions-Policy       "geolocation=(), microphone=(), camera=()"
+    # HSTS — aktif untuk domain HTTPS blog.libix.tech
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
     Header unset X-Powered-By
     Header always unset X-Powered-By
+
+    # MIME type yang benar untuk manifest & XML
+    <FilesMatch "\.webmanifest$">
+        Header always set Content-Type "application/manifest+json; charset=UTF-8"
+    </FilesMatch>
+    <FilesMatch "browserconfig\.xml$">
+        Header always set Content-Type "application/xml; charset=UTF-8"
+    </FilesMatch>
 </IfModule>
 
 # ── 10. Sembunyikan versi PHP ─────────────────────────────────────────────────
@@ -90,3 +107,16 @@ RewriteRule ^([^.]+)/?$ $1.php [NC,L]
 
 # ── 11. Paksa charset UTF-8 ───────────────────────────────────────────────────
 AddDefaultCharset UTF-8
+
+# ════════════════════════════════════════════════════════════════════════════════
+#  CUSTOM ERROR PAGES
+#  Menampilkan halaman error dinamis & user-friendly untuk semua kode error.
+#  error.php mendeteksi kode via $_SERVER['REDIRECT_STATUS'].
+# ════════════════════════════════════════════════════════════════════════════════
+ErrorDocument 400 /error.php
+ErrorDocument 403 /error.php
+ErrorDocument 404 /error.php
+ErrorDocument 405 /error.php
+ErrorDocument 429 /error.php
+ErrorDocument 500 /error.php
+ErrorDocument 503 /error.php

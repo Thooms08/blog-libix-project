@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * detail.php — legacy redirect, semua traffic sudah di-handle blog.php.
+ * detail.php - legacy redirect, semua traffic sudah di-handle blog.php.
  * File ini dipertahankan untuk backward-compat URL lama.
  */
 require_once __DIR__ . '/config.php';

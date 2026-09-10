@@ -4,11 +4,11 @@ declare(strict_types=1);
 /**
  * GET /api/posts
  *
- * Endpoint publik untuk mengambil daftar post terbaru dari blog.flavory.id.
- * Digunakan oleh flavory.id untuk menampilkan preview artikel di section blog.
+ * Endpoint publik untuk mengambil daftar post terbaru dari blog.libix.tech.
+ * Digunakan oleh libix.tech untuk menampilkan preview artikel di section blog.
  *
  * Query params (opsional):
- *   ?limit=3   — jumlah post yang dikembalikan (default: 3, max: 12)
+ *   ?limit=3   - jumlah post yang dikembalikan (default: 3, max: 12)
  *
  * Response JSON:
  * [
@@ -16,10 +16,10 @@ declare(strict_types=1);
  *     "title"        : "Judul Artikel",
  *     "slug"         : "judul-artikel",
  *     "excerpt"      : "Ringkasan singkat artikel...",
- *     "cover_image"  : "https://blog.flavory.id/assets/upload/...",
+ *     "cover_image"  : "https://blog.libix.tech/assets/upload/...",
  *     "category"     : "Bisnis",
  *     "published_at" : "25 Jun 2026",
- *     "url"          : "https://blog.flavory.id/post/judul-artikel"
+ *     "url"          : "https://blog.libix.tech/post/judul-artikel"
  *   },
  *   ...
  * ]
@@ -27,11 +27,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../config.php';
 
-// ── CORS: izinkan request dari flavory.id dan subdomain-nya ──────────────────
+// ── CORS: izinkan request dari libix.tech dan subdomain-nya ──────────────────
 $allowedOrigins = [
-    'https://flavory.id',
-    'https://www.flavory.id',
-    rtrim(getenv('FLAVORYID_URL') ?: '', '/'),
+    'https://libix.tech',
+    'https://www.libix.tech',
+    rtrim(getenv('LIBIX_URL') ?: '', '/'),
 ];
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
@@ -48,6 +48,8 @@ header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Accept');
 header('Content-Type: application/json; charset=UTF-8');
 header('X-Content-Type-Options: nosniff');
+// Cache 5 menit di browser/CDN agar libix.tech tidak hammering blog setiap request
+header('Cache-Control: public, max-age=300, stale-while-revalidate=60');
 
 // Handle preflight
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -63,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 // ── Resolve APP_URL (sumber kebenaran URL blog) ───────────────────────────────
-$appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.flavory.id', '/');
+$appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.libix.tech', '/');
 
 // ── Parameter limit (1–12) ────────────────────────────────────────────────────
 $limit = max(1, min(12, (int) ($_GET['limit'] ?? 3)));
@@ -109,7 +111,7 @@ foreach ($rows as $row) {
         $image = $appUrl . '/' . ltrim($image, '/');
     }
 
-    // excerpt: fallback ke kosong agar flavory.id bisa handle
+    // excerpt: fallback ke kosong agar libix.tech bisa handle
     $excerpt = (string) ($row['excerpt'] ?? '');
 
     // Tanggal: format "25 Jun 2026" (bahasa Indonesia)
@@ -129,6 +131,7 @@ foreach ($rows as $row) {
         'category'     => (string) ($row['category'] ?? 'Blog'),
         'published_at' => $publishedAt,
         'url'          => $appUrl . '/post/' . rawurlencode((string) $row['slug']),
+        'read_time'    => max(1, (int) ceil(str_word_count(strip_tags($excerpt)) / 200)) . ' menit',
     ];
 }
 

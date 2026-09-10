@@ -350,7 +350,7 @@ class BlogAdminLogic
             $srcImage = $canvas;
         }
 
-        // Nama file output: {slug}-{timestamp}-{random6}.jpg — mencegah collision dan enumeration
+        // Nama file output: {slug}-{timestamp}-{random6}.jpg - mencegah collision dan enumeration
         $filename  = preg_replace('/[^a-z0-9\-]/', '', $slug) . '-' . time() . '-' . bin2hex(random_bytes(3)) . '.jpg';
         $destPath  = self::UPLOAD_DIR . $filename;
         $publicUrl = self::UPLOAD_URL . $filename;
@@ -449,7 +449,7 @@ class BlogAdminLogic
 
         if (empty($kategoriIds)) return;
 
-        // Insert satu per satu — aman, mudah dibaca, tidak ada bug bind-by-ref
+        // Insert satu per satu - aman, mudah dibaca, tidak ada bug bind-by-ref
         $ins = $this->conn->prepare(
             "INSERT IGNORE INTO _KategoriToPost (A, B) VALUES (?, ?)"
         );

@@ -7,7 +7,7 @@ $blogLogic   = new BlogUserLogic($conn);
 $ulasanLogic = new UlasanUserLogic($conn);
 
 // ── Resolve APP_URL ───────────────────────────────────────────────────────
-$appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.flavory.id', '/');
+$appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.libix.tech', '/');
 
 // Ambil slug dari URL
 $slug = trim($_GET['slug'] ?? '');
@@ -20,16 +20,10 @@ if ($slug === '') {
 $post = $blogLogic->getBySlug($slug);
 
 if ($post === null) {
-    http_response_code(404);
-    $title   = '404 – Artikel Tidak Ditemukan';
-    $metaDesc = 'Artikel yang Anda cari tidak ditemukan di blog.flavory.id.';
-    $canonicalUrl = $appUrl . '/';
-    $content = '<div class="max-w-2xl mx-auto px-4 py-32 text-center">
-        <p class="text-6xl font-extrabold text-gray-200 mb-4">404</p>
-        <h1 class="text-2xl font-bold text-gray-800 mb-4">Artikel tidak ditemukan</h1>
-        <a href="/" class="text-brand-500 font-semibold hover:underline">← Kembali ke Beranda</a>
-    </div>';
-    include __DIR__ . '/layouts/User/app.blade.php';
+    $errorCode    = 404;
+    $errorTitle   = 'Artikel Tidak Ditemukan';
+    $errorMessage = 'Artikel "' . htmlspecialchars($slug) . '" tidak ada, sudah dihapus, atau URL-nya salah. Coba cari di halaman beranda.';
+    require __DIR__ . '/error.php';
     exit();
 }
 
@@ -56,94 +50,160 @@ $metaDesc = mb_strlen($_rawDesc) > 160
     ? mb_substr($_rawDesc, 0, 157) . '...'
     : $_rawDesc;
 
-// Keywords: dari nama kategori
+// Keywords: gabungan kategori + long-tail bisnis kuliner
 $_katNames    = array_column($post['categories'] ?? [], 'nama');
-$metaKeywords = implode(', ', array_merge(
-    $_katNames,
-    ['blog kuliner', 'bisnis F&B', 'UMKM kuliner', 'flavory.id']
-));
+$_baseKeywords = ['blog teknologi', 'software development', 'startup teknologi Indonesia',
+                  'artificial intelligence', 'platform digital', 'solusi digital', 'Libix Technology'];
+$metaKeywords = implode(', ', array_unique(array_merge($_katNames, $_baseKeywords)));
 
-// OG / Twitter
+// OG / Twitter - gunakan libix-logo sebagai fallback (bukan og-default.jpg)
 $ogType  = 'article';
-$ogTitle = $post['title'];
+$ogTitle = $post['title'] . ' - blog.libix.tech';
 $ogDesc  = $metaDesc;
 $ogImage = !empty($post['image'])
     ? (str_starts_with($post['image'], 'http') ? $post['image'] : $appUrl . $post['image'])
-    : $appUrl . '/assets/og-default.jpg';
+    : $appUrl . '/assets/libix-logo.png';
+
+// Dimensi OG image (artikel punya thumbnail, logo pakai 512x512)
+$ogImageWidth  = !empty($post['image']) ? 1200 : 512;
+$ogImageHeight = !empty($post['image']) ? 630  : 512;
 
 // Article meta
 $articlePublishedTime = date('c', strtotime($post['createdAt']));
 $articleModifiedTime  = date('c', strtotime($post['updatedAt'] ?? $post['createdAt']));
-$articleAuthor        = $post['author_name'] ?? 'Admin blog.flavory.id';
+$articleAuthor        = $post['author_name'] ?? 'Tim Redaksi blog.libix.tech';
 $articleSection       = !empty($_katNames) ? $_katNames[0] : 'Kuliner';
 
-// ── JSON-LD: Article + BreadcrumbList ────────────────────────────────────
+// ── Hitung reading time & word count (untuk AEO / GEO) ───────────────────
+$_plainContent  = strip_tags($post['content'] ?? '');
+$_wordCount     = str_word_count($_plainContent);
+$_readingTimeMin = max(1, (int) round($_wordCount / 200)); // ~200 kata/menit
+
+// ── Speakable CSS selectors (AEO: Google Assistant / AI Overview) ─────────
+$_speakableCss = ['h1', '.prose h2', '.prose h3', '.prose p:first-of-type'];
+
+// ── JSON-LD: Article + BreadcrumbList + Speakable + WebPage ──────────────
 $jsonLd = [
     '@context' => 'https://schema.org',
     '@graph'   => [
+        // 1. WebPage
+        [
+            '@type'           => 'WebPage',
+            '@id'             => $canonicalUrl . '#webpage',
+            'url'             => $canonicalUrl,
+            'name'            => $post['title'] . ' - blog.libix.tech',
+            'description'     => $metaDesc,
+            'inLanguage'      => 'id-ID',
+            'isPartOf'        => ['@id' => $appUrl . '/#website'],
+            'datePublished'   => $articlePublishedTime,
+            'dateModified'    => $articleModifiedTime,
+            'primaryImageOfPage' => ['@id' => $ogImage],
+            'speakable'       => [
+                '@type'            => 'SpeakableSpecification',
+                'cssSelector'      => $_speakableCss,
+            ],
+            'breadcrumb'      => ['@id' => $canonicalUrl . '#breadcrumb'],
+        ],
+        // 2. Article (NewsArticle lebih kuat untuk GEO / AI Overview)
         [
             '@type'            => 'Article',
             '@id'              => $canonicalUrl . '#article',
             'headline'         => $post['title'],
+            'alternativeHeadline' => $post['title'],
             'description'      => $metaDesc,
             'image'            => [
-                '@type' => 'ImageObject',
-                'url'   => $ogImage,
+                '@type'  => 'ImageObject',
+                '@id'    => $ogImage,
+                'url'    => $ogImage,
+                'width'  => $ogImageWidth,
+                'height' => $ogImageHeight,
             ],
             'datePublished'    => $articlePublishedTime,
             'dateModified'     => $articleModifiedTime,
             'author'           => [
                 '@type' => 'Person',
                 'name'  => $articleAuthor,
-            ],
-            'publisher'        => [
-                '@type' => 'Organization',
-                'name'  => 'blog.flavory.id',
                 'url'   => $appUrl . '/',
-                'logo'  => [
-                    '@type' => 'ImageObject',
-                    'url'   => $appUrl . '/assets/logo.png',
-                ],
             ],
+            'publisher'        => ['@id' => 'https://libix.tech/#organization'],
             'url'              => $canonicalUrl,
-            'mainEntityOfPage' => ['@id' => $canonicalUrl],
+            'mainEntityOfPage' => ['@id' => $canonicalUrl . '#webpage'],
+            'isPartOf'         => ['@id' => $appUrl . '/#website'],
             'articleSection'   => $articleSection,
-            'keywords'         => implode(', ', $_katNames),
+            'keywords'         => implode(', ', array_unique(array_merge($_katNames, $_baseKeywords))),
+            'wordCount'        => $_wordCount,
+            'timeRequired'     => 'PT' . $_readingTimeMin . 'M',
+            'inLanguage'       => 'id-ID',
+            'copyrightYear'    => date('Y', strtotime($post['createdAt'])),
+            'copyrightHolder'  => ['@id' => 'https://libix.tech/#organization'],
             'interactionStatistic' => [
                 '@type'                => 'InteractionCounter',
                 'interactionType'      => 'https://schema.org/ReadAction',
                 'userInteractionCount' => (int) $post['views'],
             ],
+            'speakable' => [
+                '@type'       => 'SpeakableSpecification',
+                'cssSelector' => $_speakableCss,
+            ],
         ],
+        // 3. BreadcrumbList
         [
-            '@type'           => 'BreadcrumbList',
-            'itemListElement' => [
+            '@type' => 'BreadcrumbList',
+            '@id'   => $canonicalUrl . '#breadcrumb',
+            'itemListElement' => array_merge(
                 [
-                    '@type'    => 'ListItem',
-                    'position' => 1,
-                    'name'     => 'Beranda',
-                    'item'     => $appUrl . '/',
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => $appUrl . '/'],
                 ],
-                [
+                !empty($_katNames) ? [[
                     '@type'    => 'ListItem',
                     'position' => 2,
+                    'name'     => $_katNames[0],
+                    'item'     => $appUrl . '/kategori/' . rawurlencode(
+                                    class_exists('BlogUserLogic')
+                                        ? BlogUserLogic::generateKategoriSlug($_katNames[0])
+                                        : strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($_katNames[0])))
+                                  ),
+                ]] : [],
+                [[
+                    '@type'    => 'ListItem',
+                    'position' => !empty($_katNames) ? 3 : 2,
                     'name'     => $post['title'],
                     'item'     => $canonicalUrl,
-                ],
-            ],
+                ]]
+            ),
         ],
     ],
 ];
 
-// Tambah AggregateRating ke artikel jika ada ulasan
+// Tambah AggregateRating + Review ke artikel jika ada ulasan
 if ($totalReview > 0) {
-    $jsonLd['@graph'][0]['aggregateRating'] = [
+    $jsonLd['@graph'][1]['aggregateRating'] = [
         '@type'       => 'AggregateRating',
-        'ratingValue' => $avgRating,
+        'ratingValue' => (string) $avgRating,
         'reviewCount' => $totalReview,
-        'bestRating'  => 5,
-        'worstRating' => 1,
+        'bestRating'  => '5',
+        'worstRating' => '1',
     ];
+    // Sertakan ulasan terbaru (maks 3) untuk snippet ulasan di SERP
+    $reviewSchemas = [];
+    foreach (array_slice($reviews, 0, 3) as $rev) {
+        if (empty($rev['comment'])) continue;
+        $reviewSchemas[] = [
+            '@type'         => 'Review',
+            'reviewRating'  => [
+                '@type'       => 'Rating',
+                'ratingValue' => (string) (int) $rev['rating'],
+                'bestRating'  => '5',
+                'worstRating' => '1',
+            ],
+            'reviewBody'    => mb_substr(htmlspecialchars_decode($rev['comment']), 0, 200),
+            'datePublished' => date('c', strtotime($rev['created_at'])),
+            'author'        => ['@type' => 'Person', 'name' => 'Pembaca blog.libix.tech'],
+        ];
+    }
+    if (!empty($reviewSchemas)) {
+        $jsonLd['@graph'][1]['review'] = $reviewSchemas;
+    }
 }
 
 /* ── helper: render N bintang ───────────────────────────────────────── */
@@ -174,13 +234,24 @@ ob_start();
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <!-- Breadcrumb -->
-        <nav class="mb-5 text-sm">
-            <a href="/" class="inline-flex items-center gap-1 text-brand-500 hover:text-brand-600 font-medium transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                Kembali ke Beranda
-            </a>
+        <nav class="mb-5 text-sm" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center gap-1 text-brand-500 font-medium flex-wrap">
+                <li>
+                    <a href="/" class="hover:text-brand-600 transition-colors">Beranda</a>
+                </li>
+                <?php if (!empty($_katNames)): ?>
+                    <li aria-hidden="true"><svg class="w-3.5 h-3.5 text-gray-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
+                    <li>
+                        <a href="/kategori/<?= htmlspecialchars(
+                            class_exists('BlogUserLogic')
+                                ? BlogUserLogic::generateKategoriSlug($_katNames[0])
+                                : strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($_katNames[0])))
+                        ) ?>" class="hover:text-brand-600 transition-colors"><?= htmlspecialchars($_katNames[0]) ?></a>
+                    </li>
+                <?php endif; ?>
+                <li aria-hidden="true"><svg class="w-3.5 h-3.5 text-gray-400 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
+                <li class="text-gray-500 line-clamp-1 max-w-xs" aria-current="page"><?= htmlspecialchars($post['title']) ?></li>
+            </ol>
         </nav>
 
         <!-- Kategori badge -->
@@ -215,7 +286,7 @@ ob_start();
                     <span class="text-white text-xs font-bold">A</span>
                 </div>
                 <span class="font-medium text-gray-700">
-                    <?= htmlspecialchars($post['author_name'] ?? 'Admin Flavory.id') ?>
+                    <?= htmlspecialchars($post['author_name'] ?? 'Admin Libix Technology') ?>
                 </span>
             </div>
 
@@ -239,6 +310,15 @@ ob_start();
                           d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                 </svg>
                 <?= number_format($post['views']) ?> Views
+            </span>
+
+            <!-- Reading time -->
+            <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <?= $_readingTimeMin ?> menit baca
             </span>
 
             <!-- Rating ringkasan -->
@@ -358,35 +438,34 @@ ob_start();
     ═════════════════════════════════════════════════ -->
 
     <!-- CTA Inline (di dalam konten) -->
-    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-500 to-orange-600 p-8 sm:p-10 text-center mb-12 shadow-xl shadow-brand-500/25">
+    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-500 to-cyan-700 p-8 sm:p-10 text-center mb-12 shadow-xl shadow-brand-500/25">
         <!-- Dekorasi bulat -->
         <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full pointer-events-none"></div>
         <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-white/10 rounded-full pointer-events-none"></div>
 
         <div class="relative z-10">
             <span class="inline-block bg-white/20 text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
-                Khusus Untuk Anda
+                Tentang Kami
             </span>
             <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">
-                Siap Naik Level Bareng Flavory.id?
+                Wujudkan Ide Digital Anda Bersama Libix Technology
             </h3>
-            <p class="text-orange-100 text-base mb-6 max-w-xl mx-auto">
-                Kelola kasir, stok, laporan &amp; pesanan online dalam satu platform  | 
-                dirancang khusus untuk UMKM kuliner Indonesia.
+            <p class="text-cyan-100 text-base mb-6 max-w-xl mx-auto">
+                Libix Technology adalah startup teknologi yang menghadirkan solusi inovatif di bidang software development, AI, dan platform digital. Kami melayani kebutuhan teknologi Anda dari konsep hingga produk jadi.
             </p>
-            <a href="https://flavory.id"
+            <a href="https://libix.tech"
                target="_blank"
                rel="noopener noreferrer"
                class="inline-flex items-center gap-2 bg-white text-brand-600 font-extrabold
-                      px-8 py-4 rounded-xl text-base hover:bg-orange-50 active:scale-95
+                      px-8 py-4 rounded-xl text-base hover:bg-cyan-50 active:scale-95
                       transition-all duration-200 shadow-lg shadow-black/20">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                 </svg>
-                Coba Flavory.id Gratis!!
+                Kenali Libix Technology
             </a>
-            <p class="text-orange-200 text-xs mt-3">Tidak perlu kartu kredit · Mulai dalam hitungan menit</p>
+            <p class="text-cyan-200 text-xs mt-3">Software Development · AI · Platform Digital · Dan banyak lagi</p>
         </div>
     </div>
 
@@ -610,7 +689,7 @@ ob_start();
      CTA STICKY BOTTOM (mobile)
 ═════════════════════════════════════════════════ -->
 <div class="fixed bottom-0 inset-x-0 z-40 sm:hidden bg-white border-t border-gray-200 shadow-2xl px-4 py-3">
-    <a href="https://flavory.id"
+    <a href="https://libix.tech"
        target="_blank"
        rel="noopener noreferrer"
        class="flex items-center justify-center gap-2 bg-brand-500 hover:bg-brand-600
@@ -619,7 +698,7 @@ ob_start();
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M13 7l5 5m0 0l-5 5m5-5H6"/>
         </svg>
-        COBA FLAVORY.ID SEKARANG
+        PELAJARI LIBIX TECHNOLOGY
     </a>
 </div>
 
@@ -723,7 +802,7 @@ ob_start();
         const dateStr   = now.toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' })
                         + ' • ' + now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
 
-        // Escape HTML untuk mencegah DOM XSS — komentar dari user tidak boleh dirender sebagai HTML
+        // Escape HTML untuk mencegah DOM XSS - komentar dari user tidak boleh dirender sebagai HTML
         function escHtml(str) {
             const d = document.createElement('div');
             d.appendChild(document.createTextNode(str));
@@ -882,7 +961,7 @@ ob_start();
                     await navigator.share(shareData);
                     return; // berhasil di-share via dialog OS
                 } catch (err) {
-                    // User membatalkan share (AbortError) — tidak perlu fallback
+                    // User membatalkan share (AbortError) - tidak perlu fallback
                     if (err.name === 'AbortError') return;
                     // Error lain → fallback ke copy link
                 }
@@ -891,7 +970,7 @@ ob_start();
             // Fallback: salin URL ke clipboard
             try {
                 await navigator.clipboard.writeText(shareData.url);
-                btnLabel.textContent = 'Link Disalin ✓';
+                btnLabel.textContent = 'Link Disalin ';
                 showToast();
             } catch (_) {
                 // Fallback lama untuk browser yang tidak support Clipboard API
@@ -903,7 +982,7 @@ ob_start();
                 ta.select();
                 try {
                     document.execCommand('copy');
-                    btnLabel.textContent = 'Link Disalin ✓';
+                    btnLabel.textContent = 'Link Disalin ';
                     showToast();
                 } catch (_) { /* silent */ }
                 document.body.removeChild(ta);

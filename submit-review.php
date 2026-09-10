@@ -30,7 +30,7 @@ if ($origin !== '' && $originHost !== $allowedHost) {
 }
 
 // Tolak jika tidak ada Origin dan tidak ada Referer (kemungkinan non-browser tool)
-// — beri sedikit toleransi untuk curl/Postman saat development
+// - beri sedikit toleransi untuk curl/Postman saat development
 // CATATAN: comment-out baris di bawah ini saat production jika diperlukan
 // if ($origin === '' && $refererHost !== $allowedHost) {
 //     http_response_code(403);

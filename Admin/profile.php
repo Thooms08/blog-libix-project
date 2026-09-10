@@ -264,7 +264,7 @@ ob_start();
                         class="w-full bg-cyber-panel border border-cyber-border rounded-xl
                                px-4 py-3 text-sm text-cyber-text placeholder-cyber-dim
                                focus:outline-none focus:border-cyber-orange transition-all
-                               focus:shadow-[0_0_0_2px_#f9731630]"
+                               focus:shadow-[0_0_0_2px_#06b6d430]"
                     >
                     <!-- Progress bar karakter -->
                     <div class="mt-2 h-1 bg-cyber-border rounded-full overflow-hidden">
@@ -276,7 +276,7 @@ ob_start();
                         class="inline-flex items-center gap-2 bg-cyber-orange hover:bg-cyber-orangeL
                                active:bg-cyber-orangeD text-white font-bold py-2.5 px-5 rounded-xl
                                text-sm transition-all"
-                        style="box-shadow:0 0 16px #f9731630">
+                        style="box-shadow:0 0 16px #06b6d430">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -295,7 +295,7 @@ ob_start();
             <div class="flex items-center gap-3 px-6 py-4 border-b border-cyber-border bg-cyber-panel">
                 <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20
                             flex items-center justify-center">
-                    <i class="devicon-github-original text-blue-400 text-base"></i>
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                 </div>
                 <div>
                     <h3 class="text-sm font-bold text-cyber-text">Ubah Username</h3>
@@ -327,7 +327,7 @@ ob_start();
                             class="w-full bg-cyber-panel border border-cyber-border rounded-xl
                                    pl-9 pr-4 py-3 text-sm text-cyber-text placeholder-cyber-dim
                                    focus:outline-none focus:border-cyber-orange transition-all
-                                   focus:shadow-[0_0_0_2px_#f9731630]"
+                                   focus:shadow-[0_0_0_2px_#06b6d430]"
                         >
                     </div>
                 </div>
@@ -336,7 +336,7 @@ ob_start();
                         class="inline-flex items-center gap-2 bg-cyber-orange hover:bg-cyber-orangeL
                                active:bg-cyber-orangeD text-white font-bold py-2.5 px-5 rounded-xl
                                text-sm transition-all"
-                        style="box-shadow:0 0 16px #f9731630">
+                        style="box-shadow:0 0 16px #06b6d430">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -388,7 +388,7 @@ ob_start();
                             class="pw-input w-full bg-cyber-panel border border-cyber-border rounded-xl
                                    px-4 pr-12 py-3 text-sm text-cyber-text placeholder-cyber-dim
                                    focus:outline-none focus:border-cyber-orange transition-all
-                                   focus:shadow-[0_0_0_2px_#f9731630]"
+                                   focus:shadow-[0_0_0_2px_#06b6d430]"
                         >
                         <button type="button"
                                 class="pw-toggle absolute inset-y-0 right-0 pr-3.5 flex items-center
@@ -418,7 +418,7 @@ ob_start();
                             class="pw-input w-full bg-cyber-panel border border-cyber-border rounded-xl
                                    px-4 pr-12 py-3 text-sm text-cyber-text placeholder-cyber-dim
                                    focus:outline-none focus:border-cyber-orange transition-all
-                                   focus:shadow-[0_0_0_2px_#f9731630]"
+                                   focus:shadow-[0_0_0_2px_#06b6d430]"
                         >
                         <button type="button"
                                 class="pw-toggle absolute inset-y-0 right-0 pr-3.5 flex items-center
@@ -454,7 +454,7 @@ ob_start();
                             class="pw-input w-full bg-cyber-panel border border-cyber-border rounded-xl
                                    px-4 pr-12 py-3 text-sm text-cyber-text placeholder-cyber-dim
                                    focus:outline-none focus:border-cyber-orange transition-all
-                                   focus:shadow-[0_0_0_2px_#f9731630]"
+                                   focus:shadow-[0_0_0_2px_#06b6d430]"
                         >
                         <button type="button"
                                 class="pw-toggle absolute inset-y-0 right-0 pr-3.5 flex items-center
@@ -472,7 +472,7 @@ ob_start();
                             class="inline-flex items-center gap-2 bg-cyber-orange hover:bg-cyber-orangeL
                                    active:bg-cyber-orangeD text-white font-bold py-2.5 px-5 rounded-xl
                                    text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                            style="box-shadow:0 0 16px #f9731630">
+                            style="box-shadow:0 0 16px #06b6d430">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                         </svg>
@@ -551,7 +551,7 @@ ob_start();
         const score  = calcStrength(val);
         const pct    = score * 25;
 
-        const colors = ['', '#ef4444', '#f97316', '#eab308', '#22c55e'];
+        const colors = ['', '#ef4444', '#06b6d4', '#eab308', '#22c55e'];
         const labels = ['', 'Sangat Lemah', 'Lemah', 'Sedang', 'Kuat'];
 
         strengthBar.style.width      = pct + '%';
@@ -582,10 +582,10 @@ ob_start();
         }
         matchLabel.classList.remove('hidden');
         if (match) {
-            matchLabel.textContent  = '✓ Password cocok';
+            matchLabel.textContent  = ' Password cocok';
             matchLabel.style.color  = '#22c55e';
         } else {
-            matchLabel.textContent  = '✗ Password tidak cocok';
+            matchLabel.textContent  = ' Password tidak cocok';
             matchLabel.style.color  = '#ef4444';
         }
     }

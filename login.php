@@ -37,11 +37,11 @@ $csrfToken = $auth->generateCsrfToken();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login  |  Flavory.id</title>
+    <title>Admin Login  |  Libix Technology</title>
 
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo.png">
-    <link rel="apple-touch-icon" href="/assets/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/libix-logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/libix-logo.png">
+    <link rel="apple-touch-icon" href="/assets/libix-logo.png">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -67,19 +67,19 @@ $csrfToken = $auth->generateCsrfToken();
                             card:    '#0f0f1a',
                             border:  '#1a1a2e',
                             panel:   '#12121f',
-                            orange:  '#f97316',
-                            orangeL: '#fb923c',
-                            orangeD: '#ea580c',
-                            glow:    '#f9731640',
+                            orange:  '#06b6d4',
+                            orangeL: '#22d3ee',
+                            orangeD: '#0891b2',
+                            glow:    '#06b6d440',
                             text:    '#e2e8f0',
                             muted:   '#64748b',
                             dim:     '#334155',
                         },
                     },
                     boxShadow: {
-                        'cyber':       '0 0 20px #f9731630, 0 0 60px #f9731610',
-                        'cyber-sm':    '0 0 10px #f9731625',
-                        'cyber-input': '0 0 0 2px #f9731650',
+                        'cyber':       '0 0 20px #06b6d430, 0 0 60px #06b6d410',
+                        'cyber-sm':    '0 0 10px #06b6d425',
+                        'cyber-input': '0 0 0 2px #06b6d450',
                     },
                     animation: {
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -115,7 +115,7 @@ $csrfToken = $auth->generateCsrfToken();
 
         /* Glow efek teks */
         .text-glow {
-            text-shadow: 0 0 20px #f9731680, 0 0 40px #f9731640;
+            text-shadow: 0 0 20px #06b6d480, 0 0 40px #06b6d440;
         }
 
         /* Scan line */
@@ -125,7 +125,7 @@ $csrfToken = $auth->generateCsrfToken();
             left: 0;
             right: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, #f97316, transparent);
+            background: linear-gradient(90deg, transparent, #06b6d4, transparent);
             animation: scan 6s linear infinite;
             pointer-events: none;
             opacity: 0.3;
@@ -139,7 +139,7 @@ $csrfToken = $auth->generateCsrfToken();
             position: absolute;
             width: 16px;
             height: 16px;
-            border-color: #f97316;
+            border-color: #06b6d4;
             border-style: solid;
         }
         .corner-tl::before {
@@ -153,18 +153,18 @@ $csrfToken = $auth->generateCsrfToken();
 
         /* Input focus glow */
         .cyber-input:focus {
-            box-shadow: 0 0 0 2px #f9731650, 0 0 12px #f9731630;
+            box-shadow: 0 0 0 2px #06b6d450, 0 0 12px #06b6d430;
         }
 
         /* Button glow hover */
         .cyber-btn:hover {
-            box-shadow: 0 0 20px #f9731650, 0 0 40px #f9731620;
+            box-shadow: 0 0 20px #06b6d450, 0 0 40px #06b6d420;
         }
 
         /* Scrollbar custom */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0a0a0f; }
-        ::-webkit-scrollbar-thumb { background: #f97316; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 2px; }
     </style>
 </head>
 
@@ -188,10 +188,10 @@ $csrfToken = $auth->generateCsrfToken();
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-cyber-card border border-cyber-border mb-4 shadow-cyber relative">
                 <div class="absolute inset-0 rounded-xl bg-cyber-orange opacity-10"></div>
-                <span class="relative text-cyber-orange font-extrabold text-2xl text-glow animate-flicker">F</span>
+                <img src="/assets/libix-logo.png" alt="Libix Technology" class="relative h-12 w-12 object-contain">
             </div>
             <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                <span class="text-cyber-text">Flavory</span><span class="text-cyber-orange text-glow">.id</span>
+                <span class="text-cyber-text">Libix</span><span class="text-cyber-orange text-glow"> Technology</span>
             </h1>
             <p class="text-cyber-muted text-sm mt-1 tracking-widest uppercase">Admin Control Panel</p>
         </div>
@@ -229,11 +229,11 @@ $csrfToken = $auth->generateCsrfToken();
                 <!-- Identifier (username / email) -->
                 <div>
                     <label for="identifier" class="block text-xs font-semibold uppercase tracking-widest text-cyber-muted mb-2">
-                        Username atau Email
+                        Username
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                            <i class="devicon-github-original text-cyber-orange text-base opacity-70"></i>
+                            <svg class="w-5 h-5 text-cyber-orange opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                         </div>
                         <input
                             type="text"
@@ -244,7 +244,6 @@ $csrfToken = $auth->generateCsrfToken();
                             spellcheck="false"
                             maxlength="191"
                             value="<?= AuthLogic::e($_POST['identifier'] ?? '') ?>"
-                            placeholder="thooms atau email@domain.com"
                             class="cyber-input w-full bg-cyber-panel border border-cyber-border rounded-xl
                                    pl-10 pr-4 py-3 text-sm text-cyber-text placeholder-cyber-dim
                                    focus:outline-none focus:border-cyber-orange transition-all duration-200"
@@ -259,7 +258,7 @@ $csrfToken = $auth->generateCsrfToken();
                     </label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                            <i class="devicon-ssh-plain text-cyber-orange text-base opacity-70"></i>
+                            <svg class="w-5 h-5 text-cyber-orange opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                         </div>
                         <input
                             type="password"
@@ -315,12 +314,8 @@ $csrfToken = $auth->generateCsrfToken();
                            transition-all duration-200 flex items-center justify-center gap-2
                            disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    <i class="devicon-linux-plain text-base"></i>
-                    <span id="btnLabel">Masuk ke Panel</span>
-                    <svg id="btnSpinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                    </svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                    <span id="btnLabel">Masuk</span>
                 </button>
 
             </form>

@@ -2,166 +2,256 @@
 declare(strict_types=1);
 
 /**
- * Router untuk PHP Built-in Development Server.
- * Mengemulasi perilaku RewriteRule + blokir file sensitif dari .htaccess.
+ * router.php - Router untuk PHP Built-in Development Server
+ *
+ * Mengemulasi perilaku .htaccess (RewriteRule + FilesMatch) untuk dev lokal.
+ * PENTING: security check berjalan PERTAMA, sebelum apapun, termasuk sebelum
+ *          serve file statis - ini mencegah kebocoran .env, config.php, dll.
  *
  * Jalankan dengan:
- *   php -S localhost:8888 router.php
+ *   php -S localhost:8000 router.php
  */
 
-$uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+// ════════════════════════════════════════════════════════════════════════════
+//  KONSTANTA & HELPERS
+// ════════════════════════════════════════════════════════════════════════════
 
-// Hilangkan trailing slash kecuali root
-if ($uri !== '/' && str_ends_with($uri, '/')) {
-    $uri = rtrim($uri, '/');
+define('BASE_DIR', __DIR__);
+
+/** Kirim halaman error dinamis dan hentikan eksekusi */
+function sendError(int $code, string $title = '', string $message = ''): never
+{
+    $errorCode    = $code;
+    $errorTitle   = $title;
+    $errorMessage = $message;
+
+    // Coba load config agar DB tersedia untuk saran kategori di halaman 404
+    // (dibungkus try/catch - boleh gagal tanpa mematikan proses)
+    if (!isset($conn)) {
+        try {
+            @require_once BASE_DIR . '/config.php';
+            @require_once BASE_DIR . '/Logic/User/Blog.php';
+        } catch (Throwable $e) { /* diabaikan */ }
+    }
+
+    require BASE_DIR . '/error.php';
+    exit();
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
-   BLOKIR FILE SENSITIF — sama persis dengan logika .htaccess
-   Harus dicek SEBELUM rule "sajikan file yang ada".
-════════════════════════════════════════════════════════════════════════════ */
-
 /**
- * Daftar pola URI yang harus selalu diblokir.
- * Mengemulasi FilesMatch dan RewriteRule [F] di .htaccess.
+ * Apakah URI ini mengarah ke file/direktori yang DILARANG diakses publik?
+ *
+ * Aturan (diurutkan dari yang paling krusial):
+ *  1. Dotfiles (.env, .htaccess, .gitignore, .git/*, dll.)
+ *  2. Ekstensi file sensitif (.env, .sql, .log, .key, .pem, dll.)
+ *  3. File JS/JSON di luar /assets/ (loading.js, package.json, dll.)
+ *  4. Direktori internal (Logic/, layouts/, partials/, Admin/partials/)
+ *  5. File PHP inti yang tidak boleh diakses langsung
+ *  6. Direktori tersembunyi di segmen manapun (mis. /foo/.git/config)
  */
-function isSensitivePath(string $uri): bool
+function isBlocked(string $uri): bool
 {
-    $path = ltrim($uri, '/');
+    // Normalisasi: hilangkan query string, decode %2F dll., lowercase untuk perbandingan
+    $path    = strtolower(ltrim(urldecode(parse_url($uri, PHP_URL_PATH) ?? $uri), '/'));
 
-    // Dotfile: .env, .htaccess, .gitignore, dll.
-    if (str_starts_with($path, '.') || str_contains($path, '/.')) {
+    // ── 1. Dotfile di segmen manapun ──────────────────────────────────────
+    // Contoh: /.env  /sub/.env  /.git/config  /dir/.hidden
+    if (preg_match('/(^|\/)\./', $path)) {
         return true;
     }
 
-    // Ekstensi file sensitif
-    $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-    $blockedExts = ['env','sql','log','bak','backup','sh','bash','conf','ini','lock','pem','key','cert','crt','p12','pfx'];
-    if (in_array($ext, $blockedExts, true)) {
+    // ── 2. Ekstensi file sensitif ─────────────────────────────────────────
+    $ext = pathinfo($path, PATHINFO_EXTENSION);
+    $blockedExts = [
+        'env','sql','log','bak','backup','sh','bash',
+        'conf','ini','lock','pem','key','cert','crt','p12','pfx',
+        'md','txt','xml','yaml','yml',  // kecuali robots.txt & sitemap.xml (ditangani sebelum ini)
+    ];
+    if ($ext !== '' && in_array($ext, $blockedExts, true)) {
         return true;
     }
 
-    // File JS / JSON di luar /assets/ (loading.js, package.json, dll.)
-    $jsExts = ['js','json','ts','jsx','tsx','vue'];
+    // ── 3. File JS/JSON di luar /assets/ ──────────────────────────────────
+    $jsExts = ['js', 'json', 'ts', 'jsx', 'tsx', 'vue'];
     if (in_array($ext, $jsExts, true) && !str_starts_with($path, 'assets/')) {
         return true;
     }
 
-    // Folder Logic, layouts, partials, Admin/partials — tidak boleh diakses langsung
-    // Folder api/ TIDAK diblokir — dibutuhkan untuk endpoint publik
-    $blockedDirs = ['logic/', 'layouts/', 'partials/', 'admin/partials/'];
+    // ── 4. Direktori internal ─────────────────────────────────────────────
+    $blockedDirs = [
+        'logic/',
+        'layouts/',
+        'partials/',
+        'admin/partials/',
+        '.git/',
+    ];
     foreach ($blockedDirs as $dir) {
-        if (str_starts_with(strtolower($path), $dir)) {
+        if (str_starts_with($path, $dir)) {
             return true;
         }
     }
 
-    // config.php dan router.php tidak boleh diakses lewat browser
-    if (in_array(strtolower($path), ['config.php', 'router.php'], true)) {
+    // ── 5. File PHP inti yang tidak boleh diakses langsung ────────────────
+    $blockedFiles = [
+        'config.php',
+        'router.php',
+        'sitemap.php',   // hanya boleh via /sitemap.xml
+        'submit-review.php', // diakses via AJAX POST, bukan langsung GET
+    ];
+    if (in_array($path, $blockedFiles, true)) {
         return true;
     }
 
     return false;
 }
 
-// Jalankan pengecekan sebelum apapun
-if (isSensitivePath($uri)) {
-    http_response_code(403);
-    echo '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><title>403</title></head>
-<body style="font-family:sans-serif;background:#0a0a0f;color:#e2e8f0;display:flex;
-             align-items:center;justify-content:center;min-height:100vh;margin:0">
-  <div style="text-align:center">
-    <p style="font-size:4rem;font-weight:800;color:#ef4444;margin:0">403</p>
-    <h1 style="margin:.5rem 0 1rem">Akses Ditolak</h1>
-    <a href="/" style="color:#f97316">← Kembali ke Beranda</a>
-  </div>
-</body></html>';
-    return true;
+// ════════════════════════════════════════════════════════════════════════════
+//  PARSE URI - dilakukan sekali di awal
+// ════════════════════════════════════════════════════════════════════════════
+
+$rawUri  = $_SERVER['REQUEST_URI'] ?? '/';
+$uri     = parse_url($rawUri, PHP_URL_PATH) ?? '/';
+$uri     = '/' . ltrim(urldecode($uri), '/');
+
+// Normalisasi trailing slash (kecuali root)
+if ($uri !== '/' && str_ends_with($uri, '/')) {
+    header('Location: ' . rtrim($uri, '/'), true, 301);
+    exit();
 }
 
-/* ════════════════════════════════════════════════════════════════════════════
-   ROUTING NORMAL
-════════════════════════════════════════════════════════════════════════════ */
+// ════════════════════════════════════════════════════════════════════════════
+//  STEP 1 - SECURITY CHECK (SELALU PERTAMA, TANPA PENGECUALIAN)
+//  Tidak ada file_exists() sebelum ini.
+// ════════════════════════════════════════════════════════════════════════════
 
-// ── 1. Sajikan file statis yang BOLEH diakses (gambar di /assets, css, dll.) ─
-if ($uri !== '/' && file_exists(__DIR__ . $uri)) {
-    return false; // built-in server menangani langsung
+// Whitelist eksplisit: path ini SELALU aman dilewatkan tanpa cek ekstensi
+$whitelist = [
+    '/robots.txt',
+    '/sitemap.xml',
+    '/site.webmanifest',
+    '/browserconfig.xml',
+    '/favicon.ico',
+];
+
+if (!in_array($uri, $whitelist, true) && isBlocked($uri)) {
+    sendError(403, 'Akses Ditolak', 'Kamu tidak punya izin untuk mengakses halaman atau file ini.');
 }
 
-// ── 2. Route: /post/{slug}  →  blog.php ──────────────────────────────────────
+// ════════════════════════════════════════════════════════════════════════════
+//  STEP 2 - ROUTE KHUSUS (sebelum serve file statis)
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── /robots.txt ───────────────────────────────────────────────────────────
+if ($uri === '/robots.txt') {
+    $f = BASE_DIR . '/robots.txt';
+    if (file_exists($f)) {
+        header('Content-Type: text/plain; charset=UTF-8');
+        readfile($f);
+    } else {
+        sendError(404);
+    }
+    exit();
+}
+
+// ── /sitemap.xml ──────────────────────────────────────────────────────────
+if ($uri === '/sitemap.xml') {
+    require BASE_DIR . '/sitemap.php';
+    exit();
+}
+
+// ── /site.webmanifest ─────────────────────────────────────────────────────
+if ($uri === '/site.webmanifest') {
+    $f = BASE_DIR . '/site.webmanifest';
+    if (file_exists($f)) {
+        header('Content-Type: application/manifest+json; charset=UTF-8');
+        readfile($f);
+    } else {
+        sendError(404);
+    }
+    exit();
+}
+
+// ── /browserconfig.xml ────────────────────────────────────────────────────
+if ($uri === '/browserconfig.xml') {
+    $f = BASE_DIR . '/browserconfig.xml';
+    if (file_exists($f)) {
+        header('Content-Type: application/xml; charset=UTF-8');
+        readfile($f);
+    } else {
+        sendError(404);
+    }
+    exit();
+}
+
+// ── /post/{slug} → blog.php ───────────────────────────────────────────────
 if (preg_match('#^/post/([a-zA-Z0-9_-]+)$#', $uri, $m)) {
     $_GET['slug'] = $m[1];
-    require __DIR__ . '/blog.php';
-    return true;
+    require BASE_DIR . '/blog.php';
+    exit();
 }
 
-// ── 2b. Route: /kategori/{slug}  →  index.php ────────────────────────────────
+// ── /kategori/{slug} → index.php ──────────────────────────────────────────
 if (preg_match('#^/kategori/([a-zA-Z0-9_-]+)$#', $uri, $m)) {
     $_GET['kat'] = $m[1];
-    require __DIR__ . '/index.php';
-    return true;
+    require BASE_DIR . '/index.php';
+    exit();
 }
 
-// ── 3. Route: /sitemap.xml  →  sitemap.php ───────────────────────────────────
-if ($uri === '/sitemap.xml') {
-    require __DIR__ . '/sitemap.php';
-    return true;
-}
-
-// ── 4. Route: /robots.txt  →  robots.txt (file statis) ──────────────────────
-if ($uri === '/robots.txt') {
-    header('Content-Type: text/plain; charset=UTF-8');
-    readfile(__DIR__ . '/robots.txt');
-    return true;
-}
-
-// ── 5. Route: /Admin/{halaman}  →  Admin/{halaman}.php ───────────────────────
-if (preg_match('#^/Admin/([a-zA-Z0-9_\-]+)$#', $uri, $m)) {
-    $file = __DIR__ . '/Admin/' . $m[1] . '.php';
-    if (file_exists($file)) {
-        require $file;
-        return true;
-    }
-}
-
-// ── 6. Route: halaman root .php tanpa ekstensi  →  {halaman}.php ─────────────
-if (preg_match('#^/([a-zA-Z0-9_-]+)$#', $uri, $m)) {
-    $file = __DIR__ . '/' . $m[1] . '.php';
-    if (file_exists($file)) {
-        require $file;
-        return true;
-    }
-}
-
-// ── 6b. Route: /api/{endpoint} → api/{endpoint}.php ─────────────────────────
+// ── /api/{endpoint} → api/{endpoint}.php ──────────────────────────────────
 if (preg_match('#^/api/([a-zA-Z0-9_\-]+)$#', $uri, $m)) {
-    $file = __DIR__ . '/api/' . $m[1] . '.php';
-    if (file_exists($file)) {
-        require $file;
-        return true;
+    $apiFile = BASE_DIR . '/api/' . $m[1] . '.php';
+    if (file_exists($apiFile)) {
+        require $apiFile;
+    } else {
+        http_response_code(404);
+        header('Content-Type: application/json; charset=UTF-8');
+        echo json_encode(['success' => false, 'error' => 'Endpoint tidak ditemukan.']);
     }
-    // File tidak ditemukan → 404 JSON
-    http_response_code(404);
-    header('Content-Type: application/json; charset=UTF-8');
-    echo json_encode(['error' => 'API endpoint not found']);
-    return true;
+    exit();
 }
 
-// ── 7. Root → index.php ──────────────────────────────────────────────────────
+// ── /Admin/{halaman} → Admin/{halaman}.php ────────────────────────────────
+if (preg_match('#^/Admin/([a-zA-Z0-9_\-]+)$#', $uri, $m)) {
+    $adminFile = BASE_DIR . '/Admin/' . $m[1] . '.php';
+    if (file_exists($adminFile)) {
+        require $adminFile;
+    } else {
+        sendError(404);
+    }
+    exit();
+}
+
+// ── / → index.php ─────────────────────────────────────────────────────────
 if ($uri === '/') {
-    require __DIR__ . '/index.php';
-    return true;
+    require BASE_DIR . '/index.php';
+    exit();
 }
 
-// ── 8. Fallback 404 ───────────────────────────────────────────────────────────
-http_response_code(404);
-echo '<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><title>404</title></head>
-<body style="font-family:sans-serif;background:#0a0a0f;color:#e2e8f0;display:flex;
-             align-items:center;justify-content:center;min-height:100vh;margin:0">
-  <div style="text-align:center">
-    <p style="font-size:4rem;font-weight:800;color:#f97316;margin:0">404</p>
-    <h1 style="margin:.5rem 0 1rem">Halaman Tidak Ditemukan</h1>
-    <a href="/" style="color:#f97316">← Kembali ke Beranda</a>
-  </div>
-</body></html>';
-return true;
+// ════════════════════════════════════════════════════════════════════════════
+//  STEP 3 - SERVE FILE STATIS YANG DIIZINKAN
+//  (hanya setelah security check lulus di STEP 1)
+// ════════════════════════════════════════════════════════════════════════════
+
+$physicalPath = BASE_DIR . $uri;
+
+if (file_exists($physicalPath) && !is_dir($physicalPath)) {
+    // File ada di disk dan sudah lolos security check → biarkan PHP built-in server tangani
+    return false;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  STEP 4 - URL TANPA EKSTENSI → coba {uri}.php
+// ════════════════════════════════════════════════════════════════════════════
+
+if (preg_match('#^/([a-zA-Z0-9_-]+)$#', $uri, $m)) {
+    $phpFile = BASE_DIR . '/' . $m[1] . '.php';
+    if (file_exists($phpFile) && !isBlocked('/' . $m[1] . '.php')) {
+        require $phpFile;
+        exit();
+    }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  FALLBACK - 404
+// ════════════════════════════════════════════════════════════════════════════
+sendError(404);

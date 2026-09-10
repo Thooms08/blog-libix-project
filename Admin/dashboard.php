@@ -61,37 +61,37 @@ $motivations = [
     [
         'quote'  => 'Kode yang baik bukan yang paling pintar, tapi yang paling mudah dipahami orang lain.',
         'author' => 'Clean Code Principle',
-        'icon'   => 'devicon-vscode-plain',
+        'icon'   => 'pencil',
     ],
     [
         'quote'  => 'Setiap artikel yang kamu tulis hari ini adalah nilai yang kamu tinggalkan untuk ribuan pembaca masa depan.',
         'author' => 'Content Creator Wisdom',
-        'icon'   => 'devicon-markdown-original',
+        'icon'   => 'document',
     ],
     [
         'quote'  => 'Data tanpa konteks hanyalah angka. Konteks tanpa data hanyalah opini. Gabungkan keduanya.',
         'author' => 'Data Analytics Maxim',
-        'icon'   => 'devicon-jupyter-plain',
+        'icon'   => 'chart',
     ],
     [
         'quote'  => 'Bisnis terbaik bukan yang paling besar, tapi yang paling konsisten memberikan nilai kepada pelanggannya.',
         'author' => 'Business Strategy',
-        'icon'   => 'devicon-linkedin-plain',
+        'icon'   => 'briefcase',
     ],
     [
         'quote'  => 'Digitalisasi bukan tujuan akhir, tapi jalan menuju efisiensi yang memberdayakan semua orang.',
         'author' => 'Digital Transformation',
-        'icon'   => 'devicon-react-original',
+        'icon'   => 'sparkles',
     ],
     [
         'quote'  => 'Satu langkah kecil setiap hari lebih baik dari satu lompatan besar yang hanya dilakukan sekali.',
         'author' => 'Agile Philosophy',
-        'icon'   => 'devicon-git-plain',
+        'icon'   => 'refresh',
     ],
     [
         'quote'  => 'UMKM yang bertransformasi digital hari ini, adalah pemimpin industri di masa depan.',
-        'author' => 'Flavory.id Mission',
-        'icon'   => 'devicon-android-plain',
+        'author' => 'Libix Technology Mission',
+        'icon'   => 'mobile',
     ],
 ];
 
@@ -135,11 +135,11 @@ $greeting = match(true) {
         </p>
         <h2 class="text-xl sm:text-2xl font-extrabold text-cyber-text">
             <?= $greeting ?>,
-            <span class="text-cyber-orange" style="text-shadow:0 0 20px #f9731660">
+            <span class="text-cyber-orange" style="text-shadow:0 0 20px #06b6d460">
                 <?= htmlspecialchars($adminUser['name'], ENT_QUOTES, 'UTF-8') ?>
-            </span> 👋
+            </span> 
         </h2>
-        <p class="text-cyber-muted text-sm mt-1">Berikut ringkasan performa blog Flavory.id hari ini.</p>
+        <p class="text-cyber-muted text-sm mt-1">Berikut ringkasan performa blog Libix Technology hari ini.</p>
     </div>
 
     <!-- Quick action -->
@@ -147,7 +147,7 @@ $greeting = match(true) {
        class="inline-flex items-center gap-2 bg-cyber-orange hover:bg-cyber-orangeL active:bg-cyber-orangeD
               text-white text-sm font-bold px-4 py-2.5 rounded-xl transition-all
               self-start sm:self-auto flex-shrink-0"
-       style="box-shadow: 0 0 16px #f9731640">
+    style="box-shadow: 0 0 16px #06b6d440">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -268,7 +268,7 @@ $greeting = match(true) {
         <!-- Header -->
         <div class="flex items-center justify-between px-5 py-4 border-b border-cyber-border">
             <div class="flex items-center gap-2.5">
-                <div class="w-1.5 h-5 rounded-full bg-cyber-orange" style="box-shadow: 0 0 8px #f97316"></div>
+                <div class="w-1.5 h-5 rounded-full bg-cyber-orange" style="box-shadow: 0 0 8px #06b6d4"></div>
                 <h3 class="text-sm font-bold text-cyber-text">Artikel Terbaru</h3>
             </div>
             <a href="/Admin/blog"
@@ -385,9 +385,20 @@ $greeting = match(true) {
                 <span class="text-[10px] font-bold tracking-widest uppercase text-cyber-orange/80">Motivasi Hari Ini</span>
             </div>
 
-            <!-- Icon devicon -->
+            <!-- Icon motivasi -->
             <div class="mb-3 relative z-10">
-                <i class="<?= $todayMotivation['icon'] ?> text-cyber-orange/30 text-4xl"></i>
+                <?php
+                $motivIcons = [
+                    'pencil'    => '<svg class="w-10 h-10 text-cyber-orange/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>',
+                    'document'  => '<svg class="w-10 h-10 text-cyber-orange/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+                    'chart'     => '<svg class="w-10 h-10 text-cyber-orange/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>',
+                    'briefcase' => '<svg class="w-10 h-10 text-cyber-orange/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+                    'sparkles'  => '<svg class="w-10 h-10 text-cyber-orange/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>',
+                    'refresh'   => '<svg class="w-10 h-10 text-cyber-orange/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>',
+                    'mobile'    => '<svg class="w-10 h-10 text-cyber-orange/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>',
+                ];
+                echo $motivIcons[$todayMotivation['icon']] ?? $motivIcons['document'];
+                ?>
             </div>
 
             <!-- Quote -->
@@ -423,25 +434,25 @@ $greeting = match(true) {
     $quickLinks = [
         [
             'href'  => '/Admin/blog',
-            'icon'  => 'devicon-markdown-original',
+            'icon'  => 'document',
             'label' => 'Kelola Blog',
             'color' => 'text-blue-400 bg-blue-500/10 border-blue-500/20',
         ],
         [
             'href'  => '/Admin/kategori',
-            'icon'  => 'devicon-thealgorithms-plain',
+            'icon'  => 'tag',
             'label' => 'Kelola Kategori',
             'color' => 'text-purple-400 bg-purple-500/10 border-purple-500/20',
         ],
         [
             'href'  => '/Admin/ulasan',
-            'icon'  => 'devicon-jira-plain',
+            'icon'  => 'chat',
             'label' => 'Kelola Ulasan',
             'color' => 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
         ],
         [
             'href'  => '/Admin/profile',
-            'icon'  => 'devicon-github-original',
+            'icon'  => 'user',
             'label' => 'Edit Profil',
             'color' => 'text-cyber-orange bg-cyber-orange/10 border-cyber-orange/20',
         ],
@@ -452,7 +463,15 @@ $greeting = match(true) {
            class="flex items-center gap-3 bg-cyber-card border border-cyber-border hover:border-cyber-orange/40
                   rounded-xl px-4 py-3 transition-all duration-150 group">
             <div class="w-9 h-9 rounded-xl border flex items-center justify-center flex-shrink-0 <?= $link['color'] ?>">
-                <i class="<?= $link['icon'] ?> text-lg"></i>
+                <?php
+                $qlIcons = [
+                    'document' => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+                    'tag'      => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>',
+                    'chat'     => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>',
+                    'user'     => '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>',
+                ];
+                echo $qlIcons[$link['icon']] ?? $qlIcons['document'];
+                ?>
             </div>
             <span class="text-xs font-semibold text-cyber-muted group-hover:text-cyber-text transition-colors">
                 <?= $link['label'] ?>

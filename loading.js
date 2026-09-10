@@ -1,6 +1,6 @@
 /**
- * loading.js  |  Flavory.id
- * Animasi loading overlay oranye modern.
+ * loading.js  |  Libix Technology
+ * Animasi loading overlay cyan modern.
  * Muncul otomatis saat: navigasi halaman, reload, submit form, fetch/XHR.
  */
 
@@ -40,7 +40,7 @@
       gap: 18px;
       padding: 36px 48px;
       background: #fff;
-      border: 2px solid #f97316;
+      border: 2px solid #06b6d4;
       border-radius: 20px;
       box-shadow: 0 0 0 6px rgba(249,115,22,0.08), 0 8px 32px rgba(249,115,22,0.18);
       animation: fl-card-in 0.22s ease forwards;
@@ -73,7 +73,7 @@
     /* Arc oranye solid */
     .fl-arc {
       fill: none;
-      stroke: #f97316;
+      stroke: #06b6d4;
       stroke-width: 4;
       stroke-linecap: round;
       stroke-dasharray: 100 50;
@@ -90,7 +90,7 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 18px;
       font-weight: 800;
-      color: #f97316;
+      color: #06b6d4;
       animation: fl-pulse 1.2s ease-in-out infinite;
       user-select: none;
     }
@@ -111,7 +111,7 @@
       height: 100%;
       width: 0%;
       border-radius: 99px;
-      background: #f97316;
+      background: #06b6d4;
       box-shadow: 0 0 8px rgba(249,115,22,0.5);
       animation: fl-indeterminate 1.3s ease-in-out infinite;
     }
@@ -129,7 +129,7 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: #f97316;
+      color: #06b6d4;
     }
 
     /* ── Top bar tipis full-width ── */
@@ -140,7 +140,7 @@
       height: 3px;
       width: 0%;
       z-index: 100000;
-      background: #f97316;
+      background: #06b6d4;
       box-shadow: 0 0 10px rgba(249,115,22,0.7);
       opacity: 0;
       transition: width 0.25s ease, opacity 0.3s ease;

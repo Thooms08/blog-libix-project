@@ -21,7 +21,7 @@ class BlogUserLogic
         $stmt = $this->conn->prepare(
             "SELECT p.id, p.title, p.slug, p.excerpt, p.content,
                     p.image, p.views, p.createdAt, p.updatedAt,
-                    COALESCE(u.name, 'Admin blog.flavory.id') AS author_name
+                    COALESCE(u.name, 'Admin blog.libix.tech') AS author_name
              FROM   Post p
              LEFT   JOIN User u ON u.id = (SELECT MIN(id) FROM User)
              WHERE  p.slug = ?

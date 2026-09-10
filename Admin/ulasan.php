@@ -144,7 +144,7 @@ ob_start();
 .swal-cyber-confirm { font-weight:700 !important; border-radius:.75rem !important; display:inline-flex !important; align-items:center !important; }
 .swal-cyber-cancel  { border:1px solid #1a1a2e !important; color:#64748b !important; border-radius:.75rem !important; }
 .swal-cyber-cancel:hover { border-color:#334155 !important; color:#e2e8f0 !important; }
-.swal2-timer-progress-bar { background:#f97316 !important; }
+.swal2-timer-progress-bar { background:#06b6d4 !important; }
 </style>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -246,7 +246,7 @@ ob_start();
             title : 'Hapus Ulasan?',
             text  : 'Ulasan ini akan dihapus permanen dan tidak bisa dikembalikan.',
             icon  : 'warning',
-            background : '#0f0f1a', color : '#e2e8f0', iconColor : '#f97316',
+            background : '#0f0f1a', color : '#e2e8f0', iconColor : '#06b6d4',
             confirmButtonColor  : '#dc2626',
             cancelButtonColor   : '#1a1a2e',
             confirmButtonText   : 'Ya, Hapus!',
@@ -269,15 +269,15 @@ ob_start();
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
-                        Swal.fire({ title:'Terhapus!', text:data.message, icon:'success', background:'#0f0f1a', color:'#e2e8f0', iconColor:'#22c55e', confirmButtonColor:'#f97316', timer:1800, timerProgressBar:true, showConfirmButton:false });
+                        Swal.fire({ title:'Terhapus!', text:data.message, icon:'success', background:'#0f0f1a', color:'#e2e8f0', iconColor:'#22c55e', confirmButtonColor:'#06b6d4', timer:1800, timerProgressBar:true, showConfirmButton:false });
                         document.querySelector(`.ulasan-row[data-id="${id}"]`)?.remove();
                         applyFilter();
                         checkEmpty();
                     } else {
-                        Swal.fire({ title:'Gagal!', text:data.message, icon:'error', background:'#0f0f1a', color:'#e2e8f0', iconColor:'#ef4444', confirmButtonColor:'#f97316' });
+                        Swal.fire({ title:'Gagal!', text:data.message, icon:'error', background:'#0f0f1a', color:'#e2e8f0', iconColor:'#ef4444', confirmButtonColor:'#06b6d4' });
                     }
                 })
-                .catch(() => Swal.fire({ title:'Koneksi Error', icon:'error', background:'#0f0f1a', color:'#e2e8f0', confirmButtonColor:'#f97316' }));
+                .catch(() => Swal.fire({ title:'Koneksi Error', icon:'error', background:'#0f0f1a', color:'#e2e8f0', confirmButtonColor:'#06b6d4' }));
         });
     };
 

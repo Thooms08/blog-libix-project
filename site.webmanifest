@@ -1,0 +1,43 @@
+{
+  "name": "blog.libix.tech",
+  "short_name": "Libix Blog",
+  "description": "Wawasan, strategi bisnis, dan panduan manajemen operasional untuk pelaku UMKM kuliner Indonesia.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#06b6d4",
+  "orientation": "any",
+  "lang": "id-ID",
+  "dir": "ltr",
+  "categories": ["business", "food", "education"],
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/assets/libix-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/libix-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/libix-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "label": "blog.libix.tech — Beranda"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Beranda",
+      "url": "/",
+      "description": "Semua artikel bisnis kuliner terbaru"
+    }
+  ]
+}

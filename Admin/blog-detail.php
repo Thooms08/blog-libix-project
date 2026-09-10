@@ -242,13 +242,13 @@ ob_start();
                 :root { --ck-color-base-background:#12121f; --ck-color-base-border:#1a1a2e;
                         --ck-color-toolbar-background:#0d0d18; --ck-color-toolbar-border:#1a1a2e;
                         --ck-color-text:#e2e8f0; --ck-color-button-default-hover-background:#1a1a2e;
-                        --ck-color-button-on-background:#f9731615; --ck-color-button-on-color:#f97316;
-                        --ck-color-focus-border:#f97316; --ck-color-focus-outer-shadow:#f9731625;
+                        --ck-color-button-on-background:#06b6d415; --ck-color-button-on-color:#06b6d4;
+                        --ck-color-focus-border:#06b6d4; --ck-color-focus-outer-shadow:#06b6d425;
                         --ck-color-base-foreground:#0f0f1a; }
                 .ck.ck-editor__main>.ck-editor__editable { min-height:320px; background:#12121f !important;
                     border-color:#1a1a2e !important; color:#e2e8f0 !important; }
-                .ck.ck-editor__main>.ck-editor__editable.ck-focused { border-color:#f97316 !important;
-                    box-shadow:0 0 0 2px #f9731630 !important; }
+                .ck.ck-editor__main>.ck-editor__editable.ck-focused { border-color:#06b6d4 !important;
+                    box-shadow:0 0 0 2px #06b6d430 !important; }
                 .ck.ck-toolbar { border-color:#1a1a2e !important; }
                 .ck.ck-button:not(.ck-disabled):hover { background:#1a1a2e !important; }
                 .ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar,
@@ -363,7 +363,7 @@ ob_start();
                                hover:bg-cyber-orangeL active:bg-cyber-orangeD text-white font-bold
                                py-3 px-5 rounded-xl text-sm transition-all
                                disabled:opacity-50 disabled:cursor-not-allowed"
-                        style="box-shadow:0 0 20px #f9731640">
+                        style="box-shadow:0 0 20px #06b6d440">
                     <svg id="submitIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M5 13l4 4L19 7"/>

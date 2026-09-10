@@ -92,7 +92,7 @@ ob_start();
         id="btnBuatKategori"
         class="inline-flex items-center gap-2 bg-cyber-orange hover:bg-cyber-orangeL active:bg-cyber-orangeD
                text-white text-sm font-bold px-5 py-3 rounded-xl transition-all self-start sm:self-auto flex-shrink-0"
-        style="box-shadow:0 0 20px #f9731640"
+        style="box-shadow:0 0 20px #06b6d440"
     >
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -219,7 +219,7 @@ ob_start();
                         class="w-full bg-cyber-panel border border-cyber-border rounded-xl px-4 py-3
                                text-sm text-cyber-text placeholder-cyber-dim
                                focus:outline-none focus:border-cyber-orange transition-all
-                               focus:shadow-[0_0_0_2px_#f9731630]"
+                               focus:shadow-[0_0_0_2px_#06b6d430]"
                     >
 
                     <!-- Progress bar karakter -->
@@ -238,7 +238,7 @@ ob_start();
                            hover:bg-cyber-orangeL active:bg-cyber-orangeD text-white font-bold
                            py-3 px-5 rounded-xl text-sm transition-all
                            disabled:opacity-50 disabled:cursor-not-allowed"
-                    style="box-shadow:0 0 16px #f9731630"
+                    style="box-shadow:0 0 16px #06b6d430"
                 >
                     <svg id="btnIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -263,7 +263,7 @@ ob_start();
 .swal-cyber-confirm{ font-weight:700 !important; border-radius:.75rem !important; display:inline-flex !important; align-items:center !important; }
 .swal-cyber-cancel { border:1px solid #1a1a2e !important; color:#64748b !important; border-radius:.75rem !important; }
 .swal-cyber-cancel:hover{ border-color:#334155 !important; color:#e2e8f0 !important; }
-.swal2-timer-progress-bar{ background:#f97316 !important; }
+.swal2-timer-progress-bar{ background:#06b6d4 !important; }
 </style>
 
 <script>
@@ -305,7 +305,7 @@ ob_start();
             namaBar.style.background = '#eab308';
             namaCount.style.color    = '#eab308';
         } else {
-            namaBar.style.background = '#f97316';
+            namaBar.style.background = '#06b6d4';
             namaCount.style.color    = '';
         }
     }
@@ -339,7 +339,7 @@ ob_start();
         formKategori.reset();
         namaCount.textContent = '0';
         namaBar.style.width   = '0%';
-        namaBar.style.background = '#f97316';
+        namaBar.style.background = '#06b6d4';
         namaCount.style.color    = '';
         modalError.classList.add('hidden');
     }
@@ -414,7 +414,7 @@ ob_start();
             icon  : 'warning',
             background   : '#0f0f1a',
             color        : '#e2e8f0',
-            iconColor    : '#f97316',
+            iconColor    : '#06b6d4',
             confirmButtonColor : '#dc2626',
             cancelButtonColor  : '#1a1a2e',
             confirmButtonText  : '<svg style="width:14px;height:14px;display:inline;margin-right:6px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>Ya, Hapus!',
@@ -437,16 +437,16 @@ ob_start();
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
-                        Swal.fire({ title:'Terhapus!', text:data.message, icon:'success', background:'#0f0f1a', color:'#e2e8f0', iconColor:'#22c55e', confirmButtonColor:'#f97316', timer:1800, timerProgressBar:true, showConfirmButton:false });
+                        Swal.fire({ title:'Terhapus!', text:data.message, icon:'success', background:'#0f0f1a', color:'#e2e8f0', iconColor:'#22c55e', confirmButtonColor:'#06b6d4', timer:1800, timerProgressBar:true, showConfirmButton:false });
                         const row = document.querySelector(`.kat-row[data-id="${id}"]`);
                         row?.remove();
                         updateCounters(-1);
                         checkEmptyState();
                     } else {
-                        Swal.fire({ title:'Gagal!', text:data.message, icon:'error', background:'#0f0f1a', color:'#e2e8f0', iconColor:'#ef4444', confirmButtonColor:'#f97316' });
+                        Swal.fire({ title:'Gagal!', text:data.message, icon:'error', background:'#0f0f1a', color:'#e2e8f0', iconColor:'#ef4444', confirmButtonColor:'#06b6d4' });
                     }
                 })
-                .catch(() => Swal.fire({ title:'Koneksi Error', text:'Tidak dapat terhubung ke server.', icon:'error', background:'#0f0f1a', color:'#e2e8f0', confirmButtonColor:'#f97316' }));
+                .catch(() => Swal.fire({ title:'Koneksi Error', text:'Tidak dapat terhubung ke server.', icon:'error', background:'#0f0f1a', color:'#e2e8f0', confirmButtonColor:'#06b6d4' }));
         });
     };
 
@@ -560,7 +560,7 @@ ob_start();
         if (rows.length === 0) {
             katListWrap.innerHTML = `
                 <div class="kat-empty bg-cyber-card border border-cyber-border rounded-2xl px-5 py-16 text-center">
-                    <i class="devicon-thealgorithms-plain text-5xl text-cyber-dim mb-4 block"></i>
+                    <svg class="w-14 h-14 text-cyber-dim mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
                     <p class="text-cyber-muted font-semibold text-base mb-1">Belum ada kategori</p>
                     <p class="text-cyber-dim text-sm mb-5">Tambahkan kategori pertama kamu sekarang.</p>
                     <button onclick="document.getElementById('btnBuatKategori').click()"

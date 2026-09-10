@@ -1,6 +1,6 @@
 <?php
 /**
- * Layout User  |  blog.flavory.id
+ * Layout User  |  blog.libix.tech
  * Dipakai oleh: index.php, blog.php, detail.php
  *
  * Variabel yang diharapkan dari halaman pemanggil:
@@ -55,105 +55,185 @@ if (isset($conn)) {
 $activeKatSlug = trim($_GET['kat'] ?? '');
 
 // ── Resolve APP_URL (tanpa trailing slash) ────────────────────────────────
-$appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.flavory.id', '/');
+$appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.libix.tech', '/');
 
 // ── Defaults SEO ──────────────────────────────────────────────────────────
-$_pageTitle    = isset($title) ? htmlspecialchars($title) : 'blog.flavory.id';
-$_fullTitle    = isset($title) ? htmlspecialchars($title) . ' - blog.flavory.id' : 'blog.flavory.id';
-$_metaDesc     = isset($metaDesc)     ? htmlspecialchars($metaDesc)     : 'Wawasan, strategi bisnis, dan panduan manajemen operasional untuk pelaku UMKM kuliner Indonesia dari blog.flavory.id.';
-$_metaKeywords = isset($metaKeywords) ? htmlspecialchars($metaKeywords) : 'bisnis kuliner, UMKM kuliner, blog kuliner, strategi F&B, aplikasi kasir, flavory';
-$_canonical    = isset($canonicalUrl) ? htmlspecialchars($canonicalUrl) : $appUrl . htmlspecialchars($_SERVER['REQUEST_URI']);
+$_pageTitle    = isset($title) ? htmlspecialchars($title) : 'blog.libix.tech';
+$_fullTitle    = isset($title) ? htmlspecialchars($title) . ' - blog.libix.tech' : 'blog.libix.tech - Wawasan & Strategi Bisnis Kuliner';
+$_metaDesc     = isset($metaDesc)     ? htmlspecialchars($metaDesc)     : 'Wawasan, strategi bisnis, dan panduan manajemen operasional untuk pelaku UMKM kuliner Indonesia dari blog.libix.tech.';
+$_metaKeywords = isset($metaKeywords) ? htmlspecialchars($metaKeywords) : 'bisnis kuliner, UMKM kuliner, blog kuliner, strategi F&B, aplikasi kasir, Libix';
+$_canonical    = isset($canonicalUrl) ? htmlspecialchars($canonicalUrl) : $appUrl . htmlspecialchars(strtok($_SERVER['REQUEST_URI'], '?'));
 $_ogTitle      = isset($ogTitle)      ? htmlspecialchars($ogTitle)      : $_pageTitle;
 $_ogDesc       = isset($ogDesc)       ? htmlspecialchars($ogDesc)       : $_metaDesc;
-$_ogImage      = isset($ogImage)      ? htmlspecialchars($ogImage)      : $appUrl . '/assets/og-default.jpg';
+// Gunakan libix-logo sebagai OG image default (thumbnail saat website di-share)
+$_ogImage      = isset($ogImage)      ? htmlspecialchars($ogImage)      : $appUrl . '/assets/libix-logo.png';
 $_ogType       = isset($ogType)       ? htmlspecialchars($ogType)       : 'website';
+$_ogImageW     = isset($ogImageWidth)  ? (int) $ogImageWidth  : 1200;
+$_ogImageH     = isset($ogImageHeight) ? (int) $ogImageHeight : 630;
 
-// ── JSON-LD default (WebSite / BreadcrumbList atau dari halaman) ──────────
+// ── Organization (dipakai oleh JSON-LD di semua halaman) ─────────────────
+$_orgSchema = [
+    '@type'       => 'Organization',
+    '@id'         => 'https://libix.tech/#organization',
+    'name'        => 'Libix Technology',
+    'url'         => 'https://libix.tech',
+    'logo'        => [
+        '@type'  => 'ImageObject',
+        '@id'    => $appUrl . '/assets/libix-logo.png',
+        'url'    => $appUrl . '/assets/libix-logo.png',
+        'width'  => 512,
+        'height' => 512,
+    ],
+    'sameAs' => [
+        'https://www.instagram.com/libix.tech',
+        'https://wa.me/6285797574754',
+    ],
+    'contactPoint' => [
+        '@type'             => 'ContactPoint',
+        'telephone'         => '+62-857-9757-4754',
+        'email'             => 'admin@libix.tech',
+        'contactType'       => 'customer service',
+        'availableLanguage' => 'Indonesian',
+    ],
+];
+
+// ── JSON-LD default (WebSite + Organization - dipakai jika halaman tidak set $jsonLd) ──
 if (!isset($jsonLd)) {
     $jsonLd = [
         '@context' => 'https://schema.org',
-        '@type'    => 'WebSite',
-        'name'     => 'blog.flavory.id',
-        'url'      => $appUrl . '/',
-        'description' => 'Blog wawasan dan strategi bisnis kuliner untuk UMKM Indonesia.',
-        'publisher' => [
-            '@type' => 'Organization',
-            'name'  => 'Flavory.id',
-            'url'   => 'https://flavory.id',
-            'logo'  => [
-                '@type' => 'ImageObject',
-                'url'   => $appUrl . '/assets/logo.png',
+        '@graph'   => [
+            [
+                '@type'       => 'WebSite',
+                '@id'         => $appUrl . '/#website',
+                'url'         => $appUrl . '/',
+                'name'        => 'blog.libix.tech',
+                'description' => 'Blog wawasan dan strategi bisnis kuliner untuk UMKM Indonesia.',
+                'inLanguage'  => 'id-ID',
+                'publisher'   => ['@id' => 'https://libix.tech/#organization'],
+                'potentialAction' => [
+                    '@type'       => 'SearchAction',
+                    'target'      => [
+                        '@type'       => 'EntryPoint',
+                        'urlTemplate' => $appUrl . '/?q={search_term_string}',
+                    ],
+                    'query-input' => 'required name=search_term_string',
+                ],
             ],
-        ],
-        'potentialAction' => [
-            '@type'       => 'SearchAction',
-            'target'      => [
-                '@type'       => 'EntryPoint',
-                'urlTemplate' => $appUrl . '/?q={search_term_string}',
-            ],
-            'query-input' => 'required name=search_term_string',
+            $_orgSchema,
         ],
     ];
+} else {
+    // Sisipkan Organization ke dalam @graph yang sudah ada dari halaman
+    if (isset($jsonLd['@graph']) && is_array($jsonLd['@graph'])) {
+        $jsonLd['@graph'][] = $_orgSchema;
+    }
 }
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" prefix="og: https://ogp.me/ns#">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ── Identitas & Performa ──────────────────────────────────────── -->
     <title><?= $_fullTitle ?></title>
+    <meta name="theme-color" content="#06b6d4">
+    <meta name="color-scheme" content="light">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="blog.libix.tech">
+    <meta name="application-name" content="blog.libix.tech">
+    <meta name="generator" content="Libix Technology">
+
+    <!-- ── DNS Prefetch & Preconnect (performa) ──────────────────────── -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- ── SEO Dasar ──────────────────────────────────────────────────── -->
     <meta name="description" content="<?= $_metaDesc ?>">
     <meta name="keywords"    content="<?= $_metaKeywords ?>">
     <meta name="robots"      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <meta name="author"      content="<?= isset($articleAuthor) ? htmlspecialchars($articleAuthor) : 'blog.flavory.id' ?>">
+    <meta name="author"      content="<?= isset($articleAuthor) ? htmlspecialchars($articleAuthor) : 'Tim Redaksi blog.libix.tech' ?>">
+    <meta name="publisher"   content="Libix Technology">
+    <meta name="copyright"   content="© <?= date('Y') ?> blog.libix.tech">
+    <meta name="language"    content="Indonesian">
+    <meta name="revisit-after" content="3 days">
+    <meta name="rating"      content="General">
     <link rel="canonical"    href="<?= $_canonical ?>">
 
-    <!-- ── Open Graph (Facebook, WhatsApp, LINE, dsb.) ───────────────── -->
+    <!-- ── Paginasi (prev/next untuk Google) ────────────────────────── -->
+    <?php if (isset($prevUrl)): ?><link rel="prev" href="<?= htmlspecialchars($prevUrl) ?>"><?php endif; ?>
+    <?php if (isset($nextUrl)): ?><link rel="next" href="<?= htmlspecialchars($nextUrl) ?>"><?php endif; ?>
+
+    <!-- ── Open Graph (WhatsApp, Facebook, LINE, Telegram, dsb.) ─────── -->
     <meta property="og:type"        content="<?= $_ogType ?>">
     <meta property="og:url"         content="<?= $_canonical ?>">
     <meta property="og:title"       content="<?= $_ogTitle ?>">
     <meta property="og:description" content="<?= $_ogDesc ?>">
     <meta property="og:image"       content="<?= $_ogImage ?>">
-    <meta property="og:image:width"  content="1200">
-    <meta property="og:image:height" content="630">
+    <meta property="og:image:secure_url" content="<?= $_ogImage ?>">
+    <meta property="og:image:width"  content="<?= $_ogImageW ?>">
+    <meta property="og:image:height" content="<?= $_ogImageH ?>">
+    <meta property="og:image:type"  content="image/<?= str_ends_with(strtolower(parse_url($_ogImage, PHP_URL_PATH) ?? ''), '.png') ? 'png' : 'jpeg' ?>">
     <meta property="og:image:alt"   content="<?= $_ogTitle ?>">
-    <meta property="og:site_name"   content="blog.flavory.id">
+    <meta property="og:site_name"   content="blog.libix.tech">
     <meta property="og:locale"      content="id_ID">
+    <meta property="og:locale:alternate" content="en_US">
     <?php if ($_ogType === 'article'): ?>
     <meta property="article:published_time" content="<?= isset($articlePublishedTime) ? htmlspecialchars($articlePublishedTime) : '' ?>">
     <meta property="article:modified_time"  content="<?= isset($articleModifiedTime)  ? htmlspecialchars($articleModifiedTime)  : '' ?>">
-    <meta property="article:author"         content="<?= isset($articleAuthor) ? htmlspecialchars($articleAuthor) : 'blog.flavory.id' ?>">
+    <meta property="article:author"         content="<?= isset($articleAuthor) ? htmlspecialchars($articleAuthor) : 'Tim Redaksi blog.libix.tech' ?>">
+    <meta property="article:publisher"      content="https://libix.tech">
     <?php if (isset($articleSection)): ?>
-    <meta property="article:section" content="<?= htmlspecialchars($articleSection) ?>">
+    <meta property="article:section"        content="<?= htmlspecialchars($articleSection) ?>">
+    <?php endif;
+    if (isset($metaKeywords)): ?>
+    <meta property="article:tag"            content="<?= htmlspecialchars($metaKeywords) ?>">
     <?php endif; ?>
     <?php endif; ?>
 
     <!-- ── Twitter / X Card ──────────────────────────────────────────── -->
     <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:site"        content="@libixtech">
+    <meta name="twitter:creator"     content="@libixtech">
     <meta name="twitter:title"       content="<?= $_ogTitle ?>">
     <meta name="twitter:description" content="<?= $_ogDesc ?>">
     <meta name="twitter:image"       content="<?= $_ogImage ?>">
     <meta name="twitter:image:alt"   content="<?= $_ogTitle ?>">
-    <meta name="twitter:site"        content="@flavoryid">
+    <meta name="twitter:domain"      content="blog.libix.tech">
+
+    <!-- ── WhatsApp / Telegram link preview (reinforced) ────────────── -->
+    <meta property="og:rich_attachment" content="true">
 
     <!-- ── JSON-LD Structured Data ───────────────────────────────────── -->
     <script type="application/ld+json">
     <?= json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?>
     </script>
 
-    <!-- Favicon placeholder -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo.png">
-    <link rel="apple-touch-icon" href="/assets/logo.png">
+    <!-- ── Favicon & App Icons (coverage penuh semua platform) ──────── -->
+    <link rel="icon"            type="image/png" sizes="512x512" href="/assets/libix-logo.png">
+    <link rel="icon"            type="image/png" sizes="192x192" href="/assets/libix-logo.png">
+    <link rel="icon"            type="image/png" sizes="96x96"   href="/assets/libix-logo.png">
+    <link rel="icon"            type="image/png" sizes="32x32"   href="/assets/libix-logo.png">
+    <link rel="icon"            type="image/png" sizes="16x16"   href="/assets/libix-logo.png">
+    <link rel="shortcut icon"   href="/assets/libix-logo.png">
+    <link rel="apple-touch-icon"                 href="/assets/libix-logo.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/assets/libix-logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/libix-logo.png">
+    <meta name="msapplication-TileImage" content="/assets/libix-logo.png">
+    <meta name="msapplication-TileColor" content="#06b6d4">
+    <meta name="msapplication-config"    content="/browserconfig.xml">
+    <link rel="manifest" href="/site.webmanifest">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts: Plus Jakarta Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Google Fonts: Plus Jakarta Sans (preload untuk performa) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Devicon CDN -->
@@ -168,11 +248,11 @@ if (!isset($jsonLd)) {
                     },
                     colors: {
                         brand: {
-                            50:  '#fff7ed',
-                            100: '#ffedd5',
-                            500: '#f97316',
-                            600: '#ea580c',
-                            700: '#c2410c',
+                            50: '#ecfeff',
+                            100: '#cffafe',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                            700: '#0e7490',
                         }
                     }
                 }
@@ -198,11 +278,9 @@ if (!isset($jsonLd)) {
 
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-3 flex-shrink-0">
-                    <div class="h-10 w-10 bg-brand-500 rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-lg">F</span>
-                    </div>
+                    <img src="/assets/libix-logo.png" alt="Libix Technology" class="h-10 w-auto object-contain">
                     <span class="font-extrabold text-xl text-gray-900 tracking-tight">
-                        blog.<span class="text-brand-500">flavory.id</span>
+                        blog.<span class="text-brand-500">libix.tech</span>
                     </span>
                 </a>
 
@@ -329,15 +407,13 @@ if (!isset($jsonLd)) {
                 <!-- Brand -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
-                        <div class="h-9 w-9 bg-brand-500 rounded-lg flex items-center justify-center">
-                            <span class="text-white font-bold">F</span>
-                        </div>
+                        <img src="/assets/libix-logo.png" alt="Libix Technology" class="h-9 w-9 rounded-lg object-contain bg-white p-0.5">
                         <span class="font-extrabold text-xl text-white tracking-tight">
-                            blog.<span class="text-brand-500">flavory.id</span>
+                            blog.<span class="text-brand-500">libix.tech</span>
                         </span>
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        blog.flavory.id adalah media informasi kuliner dan panduan bisnis F&B untuk pelaku UMKM Indonesia.
+                        blog.libix.tech adalah media informasi kuliner dan panduan bisnis F&B untuk pelaku UMKM Indonesia.
                         Temukan wawasan, strategi, dan solusi digital untuk mengembangkan bisnis kuliner Anda.
                     </p>
                 </div>
@@ -375,14 +451,14 @@ if (!isset($jsonLd)) {
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                             </svg>
-                            <span>Email: adminku@flavory.id</span>
+                            <span>Email: admin@libix.tech</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
             <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
-                <p>&copy; <?= date('Y') ?> blog.flavory.id. All rights reserved.</p>
+                <p>&copy; <?= date('Y') ?> blog.libix.tech. All rights reserved.</p>
             </div>
         </div>
     </footer>

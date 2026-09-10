@@ -5,7 +5,7 @@ require_once __DIR__ . '/Logic/User/Blog.php';
 $blogLogic = new BlogUserLogic($conn);
 
 // ── Resolve APP_URL ───────────────────────────────────────────────────────
-$appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.flavory.id', '/');
+$appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.libix.tech', '/');
 
 // ── Filter kategori ──────────────────────────────────────────────────────
 $activeKatSlug = trim($_GET['kat'] ?? '');
@@ -44,50 +44,84 @@ $title = $activeKat
 if ($activeKat) {
     // Halaman kategori
     $metaDesc     = 'Temukan ' . $totalPosts . ' artikel terbaik tentang ' . $activeKat['nama']
-                  . ' di blog.flavory.id — wawasan dan strategi bisnis kuliner untuk UMKM Indonesia.';
-    $metaKeywords = htmlspecialchars($activeKat['nama']) . ', blog kuliner, bisnis F&B, UMKM kuliner, flavory.id';
-    $ogTitle      = 'Kategori ' . $activeKat['nama'] . ' - blog.flavory.id';
+                  . ' di blog.libix.tech - wawasan, strategi, dan panduan bisnis kuliner untuk UMKM Indonesia.';
+    $metaKeywords = htmlspecialchars($activeKat['nama'])
+                  . ', blog kuliner, bisnis F&B Indonesia, UMKM kuliner, strategi restoran, manajemen kuliner, Libix Technology';
+    $ogTitle      = 'Artikel ' . $activeKat['nama'] . ' - blog.libix.tech';
     $ogDesc       = $metaDesc;
+    // OG image fallback: libix-logo (bukan og-default.jpg)
+    $ogImage      = $appUrl . '/assets/libix-logo.png';
+    $ogImageWidth  = 512;
+    $ogImageHeight = 512;
 
     // Canonical: /kategori/{slug} untuk page 1, tambah ?page=N untuk halaman berikutnya
     $canonicalUrl = $appUrl . '/kategori/' . rawurlencode($activeKatSlug);
     if ($page > 1) $canonicalUrl .= '?page=' . $page;
 
-    // JSON-LD: CollectionPage + BreadcrumbList
+    // Prev / Next untuk paginasi SEO
+    $prevUrl = $page > 1          ? $appUrl . '/kategori/' . rawurlencode($activeKatSlug) . ($page > 2  ? '?page=' . ($page - 1) : '') : null;
+    $nextUrl = $page < $totalPages ? $appUrl . '/kategori/' . rawurlencode($activeKatSlug) . '?page=' . ($page + 1) : null;
+
+    // JSON-LD: CollectionPage + BreadcrumbList + WebSite
     $jsonLd = [
         '@context' => 'https://schema.org',
         '@graph'   => [
             [
                 '@type'       => 'CollectionPage',
-                '@id'         => $canonicalUrl,
+                '@id'         => $canonicalUrl . '#webpage',
                 'url'         => $canonicalUrl,
-                'name'        => 'Kategori ' . $activeKat['nama'] . ' - blog.flavory.id',
+                'name'        => 'Artikel ' . $activeKat['nama'] . ' - blog.libix.tech',
                 'description' => $metaDesc,
-                'isPartOf'    => ['@id' => $appUrl . '/'],
+                'inLanguage'  => 'id-ID',
+                'isPartOf'    => ['@id' => $appUrl . '/#website'],
+                'breadcrumb'  => ['@id' => $canonicalUrl . '#breadcrumb'],
+                'speakable'   => [
+                    '@type'       => 'SpeakableSpecification',
+                    'cssSelector' => ['h1', '.text-gray-600'],
+                ],
             ],
             [
                 '@type'           => 'BreadcrumbList',
+                '@id'             => $canonicalUrl . '#breadcrumb',
                 'itemListElement' => [
                     ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => $appUrl . '/'],
                     ['@type' => 'ListItem', 'position' => 2, 'name' => 'Kategori ' . $activeKat['nama'], 'item' => $canonicalUrl],
                 ],
             ],
+            [
+                '@type'       => 'WebSite',
+                '@id'         => $appUrl . '/#website',
+                'url'         => $appUrl . '/',
+                'name'        => 'blog.libix.tech',
+                'description' => 'Blog wawasan dan strategi bisnis kuliner untuk UMKM Indonesia.',
+                'inLanguage'  => 'id-ID',
+                'publisher'   => ['@id' => 'https://libix.tech/#organization'],
+            ],
         ],
     ];
 } else {
     // Halaman beranda
-    $metaDesc     = 'blog.flavory.id — wawasan, strategi bisnis, dan panduan manajemen operasional '
-                  . 'untuk pelaku UMKM kuliner Indonesia. Baca ' . $totalPosts . ' artikel terpilih.';
-    $metaKeywords = 'blog kuliner, bisnis F&B, UMKM kuliner, strategi restoran, kasir digital, flavory.id';
-    $ogTitle      = 'blog.flavory.id — Wawasan & Strategi Bisnis Kuliner';
+    $metaDesc     = 'blog.libix.tech - wawasan, strategi bisnis, dan panduan manajemen operasional '
+                  . 'untuk pelaku UMKM kuliner Indonesia. Baca ' . $totalPosts . ' artikel terpilih tentang '
+                  . 'bisnis F&B, kasir digital, manajemen restoran, dan pertumbuhan kuliner.';
+    $metaKeywords = 'blog kuliner, bisnis F&B Indonesia, UMKM kuliner, strategi restoran, kasir digital, '
+                  . 'manajemen operasional kuliner, tips bisnis kuliner, Libix Technology';
+    $ogTitle      = 'blog.libix.tech - Wawasan & Strategi Bisnis Kuliner Indonesia';
     $ogDesc       = $metaDesc;
+    $ogImage      = $appUrl . '/assets/libix-logo.png';
+    $ogImageWidth  = 512;
+    $ogImageHeight = 512;
 
     // Canonical: root untuk page 1, tambahkan ?page=N untuk halaman berikutnya
     $canonicalUrl = $page > 1
         ? $appUrl . '/?page=' . $page
         : $appUrl . '/';
 
-    // JSON-LD: WebPage + WebSite
+    // Prev / Next untuk paginasi SEO
+    $prevUrl = $page > 1          ? ($page === 2 ? $appUrl . '/' : $appUrl . '/?page=' . ($page - 1)) : null;
+    $nextUrl = $page < $totalPages ? $appUrl . '/?page=' . ($page + 1) : null;
+
+    // JSON-LD: WebSite + WebPage + Speakable + SearchAction
     $jsonLd = [
         '@context' => 'https://schema.org',
         '@graph'   => [
@@ -95,14 +129,11 @@ if ($activeKat) {
                 '@type'       => 'WebSite',
                 '@id'         => $appUrl . '/#website',
                 'url'         => $appUrl . '/',
-                'name'        => 'blog.flavory.id',
+                'name'        => 'blog.libix.tech',
+                'alternateName' => 'Blog Libix Technology',
                 'description' => 'Blog wawasan dan strategi bisnis kuliner untuk UMKM Indonesia.',
-                'publisher'   => [
-                    '@type' => 'Organization',
-                    'name'  => 'Flavory.id',
-                    'url'   => 'https://flavory.id',
-                    'logo'  => ['@type' => 'ImageObject', 'url' => $appUrl . '/assets/logo.png'],
-                ],
+                'inLanguage'  => 'id-ID',
+                'publisher'   => ['@id' => 'https://libix.tech/#organization'],
                 'potentialAction' => [
                     '@type'       => 'SearchAction',
                     'target'      => ['@type' => 'EntryPoint', 'urlTemplate' => $appUrl . '/?q={search_term_string}'],
@@ -111,11 +142,20 @@ if ($activeKat) {
             ],
             [
                 '@type'       => 'WebPage',
-                '@id'         => $canonicalUrl,
+                '@id'         => $canonicalUrl . '#webpage',
                 'url'         => $canonicalUrl,
-                'name'        => 'Beranda Blog & Informasi Kuliner - blog.flavory.id',
+                'name'        => 'blog.libix.tech - Wawasan & Strategi Bisnis Kuliner Indonesia',
                 'description' => $metaDesc,
+                'inLanguage'  => 'id-ID',
                 'isPartOf'    => ['@id' => $appUrl . '/#website'],
+                'about'       => [
+                    '@type' => 'Thing',
+                    'name'  => 'Bisnis Kuliner & UMKM F&B Indonesia',
+                ],
+                'speakable'   => [
+                    '@type'       => 'SpeakableSpecification',
+                    'cssSelector' => ['h1', '.text-gray-600'],
+                ],
             ],
         ],
     ];
@@ -153,7 +193,7 @@ ob_start();
                 <?= $totalPosts ?> artikel dalam kategori <strong><?= htmlspecialchars($activeKat['nama']) ?></strong>.
             </p>
         <?php else: ?>
-            <span class="text-brand-500 font-bold tracking-wider uppercase text-sm">blog.flavory.id</span>
+            <span class="text-brand-500 font-bold tracking-wider uppercase text-sm">blog.libix.tech</span>
             <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mt-2 mb-4">
                 Wawasan &amp; Strategi Bisnis Kuliner
             </h1>

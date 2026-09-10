@@ -1,20 +1,46 @@
+# robots.txt - blog.libix.tech
+# Diperbarui untuk kompatibilitas Google Search Console & Bing Webmaster Tools
+
 User-agent: *
 Allow: /
 
-# Jangan indeks area admin
+# ── Jangan indeks area internal ──────────────────────────────────────────
 Disallow: /Admin/
 Disallow: /Logic/
 Disallow: /layouts/
 Disallow: /partials/
 Disallow: /assets/post/
-
-# Jangan indeks query string utility (filter kategori masih boleh diindeks via canonical)
-Disallow: /*?page=*
 Disallow: /login
 Disallow: /submit-review.php
+Disallow: /api/
 
-# Crawl-delay untuk bot yang patuh
+# ── Cegah crawl query string utilitas yang tidak bermakna ────────────────
+# CATATAN: ?page=* TIDAK diblokir karena Google menggunakan paginasi rel-canonical.
+# ?q=* (search internal) dan ?sort=* tidak perlu diindeks.
+Disallow: /*?q=*
+Disallow: /*?sort=*
+Disallow: /*?ref=*
+Disallow: /*?utm_*
+
+# ── Crawl-delay untuk bot yang patuh (mengurangi beban server) ───────────
 Crawl-delay: 1
 
-# Sitemap
-Sitemap: https://blog.flavory.id/sitemap.xml
+# ── Allowlist statis penting ─────────────────────────────────────────────
+Allow: /assets/libix-logo.png
+Allow: /assets/post/
+Allow: /site.webmanifest
+Allow: /sitemap.xml
+
+# ── Sitemap ───────────────────────────────────────────────────────────────
+Sitemap: https://blog.libix.tech/sitemap.xml
+
+# ── Aturan khusus per bot ─────────────────────────────────────────────────
+# Cegah AhrefsBot & MJ12bot boros crawl budget
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Crawl-delay: 10

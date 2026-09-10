@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= isset($title) ? htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '  |  Admin Flavory.id' : 'Admin Panel  |  Flavory.id' ?></title>
+    <title><?= isset($title) ? htmlspecialchars($title, ENT_QUOTES, 'UTF-8') . '  |  Admin Libix Technology' : 'Admin Panel  |  Libix Technology' ?></title>
 
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logo.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/logo.png">
-    <link rel="apple-touch-icon" href="/assets/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/libix-logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/libix-logo.png">
+    <link rel="apple-touch-icon" href="/assets/libix-logo.png">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -17,8 +17,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 
-    <!-- Devicon CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
 
     <script>
         tailwind.config = {
@@ -34,9 +32,9 @@
                             panel:   '#12121f',
                             sidebar: '#0d0d18',
                             border:  '#1a1a2e',
-                            orange:  '#f97316',
-                            orangeL: '#fb923c',
-                            orangeD: '#ea580c',
+                            orange:  '#06b6d4',
+                            orangeL: '#22d3ee',
+                            orangeD: '#0891b2',
                             text:    '#e2e8f0',
                             muted:   '#64748b',
                             dim:     '#334155',
@@ -44,8 +42,8 @@
                         },
                     },
                     boxShadow: {
-                        'cyber':    '0 0 20px #f9731630, 0 0 60px #f9731610',
-                        'cyber-sm': '0 0 10px #f9731625',
+                        'cyber':    '0 0 20px #06b6d430, 0 0 60px #06b6d410',
+                        'cyber-sm': '0 0 10px #06b6d425',
                         'sidebar':  '4px 0 24px rgba(0,0,0,0.4)',
                     },
                     animation: {
@@ -80,10 +78,10 @@
         /* Sidebar nav item active glow */
         .nav-item-active {
             background: linear-gradient(90deg, rgba(249,115,22,0.15) 0%, rgba(249,115,22,0.05) 100%);
-            border-left: 3px solid #f97316;
+            border-left: 3px solid #06b6d4;
         }
-        .nav-item-active .nav-icon { color: #f97316; }
-        .nav-item-active .nav-text { color: #f97316; font-weight: 700; }
+        .nav-item-active .nav-icon { color: #06b6d4; }
+        .nav-item-active .nav-text { color: #06b6d4; font-weight: 700; }
 
         /* Hover nav item */
         .nav-item:hover:not(.nav-item-active) {
@@ -94,20 +92,20 @@
         /* Sidebar scrollbar */
         #sidebar::-webkit-scrollbar { width: 3px; }
         #sidebar::-webkit-scrollbar-track { background: transparent; }
-        #sidebar::-webkit-scrollbar-thumb { background: #f9731640; border-radius: 2px; }
+        #sidebar::-webkit-scrollbar-thumb { background: #06b6d440; border-radius: 2px; }
 
         /* Main scrollbar */
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0a0a0f; }
-        ::-webkit-scrollbar-thumb { background: #f9731650; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb { background: #06b6d450; border-radius: 2px; }
 
         /* Glow text */
-        .text-glow { text-shadow: 0 0 20px #f9731680, 0 0 40px #f9731440; }
+        .text-glow { text-shadow: 0 0 20px #06b6d480, 0 0 40px #06b6d440; }
 
         /* Divider gradient */
         .sidebar-divider {
             height: 1px;
-            background: linear-gradient(90deg, transparent, #f9731630, transparent);
+            background: linear-gradient(90deg, transparent, #06b6d430, transparent);
         }
 
         /* Topbar blur */
@@ -194,11 +192,11 @@ if (empty($logoutCsrf)) {
         <div class="flex items-center gap-3 px-5 py-5 border-b border-cyber-border flex-shrink-0">
             <div class="relative w-9 h-9 rounded-lg bg-cyber-card border border-cyber-border flex items-center justify-center flex-shrink-0">
                 <div class="absolute inset-0 rounded-lg bg-cyber-orange opacity-10"></div>
-                <span class="relative text-cyber-orange font-extrabold text-lg text-glow animate-flicker">F</span>
+                <img src="/assets/libix-logo.png" alt="Libix Technology" class="relative h-7 w-7 object-contain">
             </div>
             <div class="min-w-0">
                 <div class="font-extrabold text-sm tracking-tight leading-none">
-                    <span class="text-cyber-text">Flavory</span><span class="text-cyber-orange text-glow">.id</span>
+                    <span class="text-cyber-text">Libix</span><span class="text-cyber-orange text-glow"> Technology</span>
                 </div>
                 <div class="text-[10px] text-cyber-muted tracking-widest uppercase mt-0.5">Admin Panel</div>
             </div>
@@ -249,7 +247,7 @@ if (empty($logoutCsrf)) {
             <a href="/Admin/dashboard"
                class="nav-item border-l-3 border-transparent flex items-center gap-3 px-3 py-2.5 rounded-r-xl rounded-l-none transition-all duration-150
                       <?= (basename($_SERVER['PHP_SELF']) === 'dashboard.php') ? 'nav-item-active' : 'border-l-[3px]' ?>">
-                <i class="nav-icon devicon-linux-plain text-cyber-muted text-lg w-5 text-center flex-shrink-0"></i>
+                <svg class="nav-icon text-cyber-muted w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <span class="nav-text text-sm text-cyber-muted">Dashboard</span>
             </a>
 
@@ -257,7 +255,7 @@ if (empty($logoutCsrf)) {
             <a href="/Admin/blog"
                class="nav-item border-l-[3px] border-transparent flex items-center gap-3 px-3 py-2.5 rounded-r-xl rounded-l-none transition-all duration-150
                       <?= (basename($_SERVER['PHP_SELF']) === 'blog.php') ? 'nav-item-active' : '' ?>">
-                <i class="nav-icon devicon-markdown-original text-cyber-muted text-lg w-5 text-center flex-shrink-0"></i>
+                <svg class="nav-icon text-cyber-muted w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 <span class="nav-text text-sm text-cyber-muted">Blog</span>
             </a>
 
@@ -265,7 +263,7 @@ if (empty($logoutCsrf)) {
             <a href="/Admin/kategori"
                class="nav-item border-l-[3px] border-transparent flex items-center gap-3 px-3 py-2.5 rounded-r-xl rounded-l-none transition-all duration-150
                       <?= (basename($_SERVER['PHP_SELF']) === 'kategori.php') ? 'nav-item-active' : '' ?>">
-                <i class="nav-icon devicon-thealgorithms-plain text-cyber-muted text-lg w-5 text-center flex-shrink-0"></i>
+                <svg class="nav-icon text-cyber-muted w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
                 <span class="nav-text text-sm text-cyber-muted">Kategori</span>
             </a>
 
@@ -273,7 +271,7 @@ if (empty($logoutCsrf)) {
             <a href="/Admin/ulasan"
                class="nav-item border-l-[3px] border-transparent flex items-center gap-3 px-3 py-2.5 rounded-r-xl rounded-l-none transition-all duration-150
                       <?= (basename($_SERVER['PHP_SELF']) === 'ulasan.php') ? 'nav-item-active' : '' ?>">
-                <i class="nav-icon devicon-jira-plain text-cyber-muted text-lg w-5 text-center flex-shrink-0"></i>
+                <svg class="nav-icon text-cyber-muted w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
                 <span class="nav-text text-sm text-cyber-muted">Ulasan</span>
             </a>
 
@@ -285,7 +283,7 @@ if (empty($logoutCsrf)) {
             <a href="/Admin/profile"
                class="nav-item border-l-[3px] border-transparent flex items-center gap-3 px-3 py-2.5 rounded-r-xl rounded-l-none transition-all duration-150
                       <?= (basename($_SERVER['PHP_SELF']) === 'profile.php') ? 'nav-item-active' : '' ?>">
-                <i class="nav-icon devicon-github-original text-cyber-muted text-lg w-5 text-center flex-shrink-0"></i>
+                <svg class="nav-icon text-cyber-muted w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <span class="nav-text text-sm text-cyber-muted">Profil</span>
             </a>
 
@@ -372,7 +370,7 @@ if (empty($logoutCsrf)) {
                        class="hidden sm:flex items-center gap-1.5 text-[11px] text-cyber-muted hover:text-cyber-orange
                               border border-cyber-border hover:border-cyber-orange rounded-lg px-2.5 py-1.5 bg-cyber-card transition-all"
                        title="Lihat Blog">
-                        <i class="devicon-chrome-plain text-base"></i>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         <span>Lihat Blog</span>
                     </a>
 
@@ -415,12 +413,12 @@ if (empty($logoutCsrf)) {
                             <div class="py-1">
                                 <a href="/Admin/profile"
                                    class="flex items-center gap-2.5 px-4 py-2 text-xs text-cyber-muted hover:text-cyber-orange hover:bg-cyber-orange/5 transition-all">
-                                    <i class="devicon-github-original text-base"></i>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                     Profil Saya
                                 </a>
                                 <a href="/" target="_blank"
                                    class="flex items-center gap-2.5 px-4 py-2 text-xs text-cyber-muted hover:text-cyber-orange hover:bg-cyber-orange/5 transition-all">
-                                    <i class="devicon-chrome-plain text-base"></i>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     Lihat Blog
                                 </a>
                             </div>
@@ -456,7 +454,7 @@ if (empty($logoutCsrf)) {
             <div class="flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-cyber-dim">
                 <span>
                     &copy; <?= date('Y') ?>
-                    <span class="text-cyber-orange">Flavory.id</span>
+                    <span class="text-cyber-orange">Libix Technology</span>
                     · Admin Panel
                 </span>
                 <span class="flex items-center gap-1.5">

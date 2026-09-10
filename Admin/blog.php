@@ -66,7 +66,7 @@ ob_start();
     <a href="/Admin/blog-detail"
        class="inline-flex items-center gap-2 bg-cyber-orange hover:bg-cyber-orangeL active:bg-cyber-orangeD
               text-white text-sm font-bold px-5 py-3 rounded-xl transition-all self-start sm:self-auto flex-shrink-0"
-       style="box-shadow:0 0 20px #f9731640">
+    style="box-shadow:0 0 20px #06b6d440">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
@@ -161,7 +161,7 @@ ob_start();
             /* Tema cyberpunk */
             background    : '#0f0f1a',
             color         : '#e2e8f0',
-            iconColor     : '#f97316',
+            iconColor     : '#06b6d4',
             confirmButtonColor  : '#dc2626',
             cancelButtonColor   : '#1a1a2e',
             confirmButtonText   : '<svg style="width:14px;height:14px;display:inline;margin-right:6px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>Ya, Hapus!',
@@ -202,7 +202,7 @@ ob_start();
                             background     : '#0f0f1a',
                             color          : '#e2e8f0',
                             iconColor      : '#22c55e',
-                            confirmButtonColor : '#f97316',
+                            confirmButtonColor : '#06b6d4',
                             timer    : 1800,
                             timerProgressBar : true,
                             showConfirmButton : false,
@@ -217,7 +217,7 @@ ob_start();
                         if (remaining === 0) {
                             document.getElementById('blogListWrapper').innerHTML = `
                                 <div class="bg-cyber-card border border-cyber-border rounded-2xl px-5 py-16 text-center">
-                                    <i class="devicon-markdown-original text-5xl text-cyber-dim mb-4 block"></i>
+                                    <svg class="w-14 h-14 text-cyber-dim mb-4 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                     <p class="text-cyber-muted font-medium">Belum ada artikel.</p>
                                     <a href="/Admin/blog-detail"
                                        class="mt-4 inline-flex items-center gap-2 bg-cyber-orange text-white text-sm font-bold px-4 py-2 rounded-xl">
@@ -233,7 +233,7 @@ ob_start();
                             background     : '#0f0f1a',
                             color          : '#e2e8f0',
                             iconColor      : '#ef4444',
-                            confirmButtonColor : '#f97316',
+                            confirmButtonColor : '#06b6d4',
                         });
                     }
                 })
@@ -244,7 +244,7 @@ ob_start();
                         icon     : 'error',
                         background     : '#0f0f1a',
                         color          : '#e2e8f0',
-                        confirmButtonColor : '#f97316',
+                        confirmButtonColor : '#06b6d4',
                     });
                 });
         });
@@ -261,7 +261,7 @@ ob_start();
 .swal-cyber-confirm { font-weight: 700 !important; border-radius: .75rem !important; display: inline-flex !important; align-items: center !important; }
 .swal-cyber-cancel  { border: 1px solid #1a1a2e !important; color: #64748b !important; border-radius: .75rem !important; }
 .swal-cyber-cancel:hover { border-color: #334155 !important; color: #e2e8f0 !important; }
-.swal2-timer-progress-bar { background: #f97316 !important; }
+.swal2-timer-progress-bar { background: #06b6d4 !important; }
 </style>
 
 <?php
