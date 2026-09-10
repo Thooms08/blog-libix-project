@@ -24,7 +24,7 @@ if (empty($ulasans)): ?>
         <div class="grid grid-cols-[2fr_1fr_80px_100px_88px] gap-4 px-5 py-3 border-b border-cyber-border
                     bg-cyber-panel text-[10px] font-bold uppercase tracking-widest text-cyber-dim">
             <span>Ulasan</span>
-            <span>Artikel</span>
+            <span>Blog</span>
             <span class="text-center">Rating</span>
             <span class="text-center">Status</span>
             <span class="text-center">Aksi</span>

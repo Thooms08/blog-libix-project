@@ -59,9 +59,9 @@ $appUrl = rtrim(getenv('APP_URL') ?: 'https://blog.libix.tech', '/');
 
 // ── Defaults SEO ──────────────────────────────────────────────────────────
 $_pageTitle    = isset($title) ? htmlspecialchars($title) : 'blog.libix.tech';
-$_fullTitle    = isset($title) ? htmlspecialchars($title) . ' - blog.libix.tech' : 'blog.libix.tech - Wawasan & Strategi Bisnis Kuliner';
-$_metaDesc     = isset($metaDesc)     ? htmlspecialchars($metaDesc)     : 'Wawasan, strategi bisnis, dan panduan manajemen operasional untuk pelaku UMKM kuliner Indonesia dari blog.libix.tech.';
-$_metaKeywords = isset($metaKeywords) ? htmlspecialchars($metaKeywords) : 'bisnis kuliner, UMKM kuliner, blog kuliner, strategi F&B, aplikasi kasir, Libix';
+$_fullTitle    = isset($title) ? htmlspecialchars($title) . ' - blog.libix.tech' : 'blog.libix.tech - Wawasan & Insight Teknologi';
+$_metaDesc     = isset($metaDesc)     ? htmlspecialchars($metaDesc)     : 'Wawasan, inovasi teknologi, dan insight digital dari Libix Technology. Software development, AI, platform digital, dan solusi teknologi terkini.';
+$_metaKeywords = isset($metaKeywords) ? htmlspecialchars($metaKeywords) : 'blog teknologi, software development, AI, startup Indonesia, platform digital, solusi digital, Libix Technology';
 $_canonical    = isset($canonicalUrl) ? htmlspecialchars($canonicalUrl) : $appUrl . htmlspecialchars(strtok($_SERVER['REQUEST_URI'], '?'));
 $_ogTitle      = isset($ogTitle)      ? htmlspecialchars($ogTitle)      : $_pageTitle;
 $_ogDesc       = isset($ogDesc)       ? htmlspecialchars($ogDesc)       : $_metaDesc;
@@ -107,7 +107,7 @@ if (!isset($jsonLd)) {
                 '@id'         => $appUrl . '/#website',
                 'url'         => $appUrl . '/',
                 'name'        => 'blog.libix.tech',
-                'description' => 'Blog wawasan dan strategi bisnis kuliner untuk UMKM Indonesia.',
+                'description' => 'Blog wawasan, inovasi teknologi, dan solusi digital dari Libix Technology.',
                 'inLanguage'  => 'id-ID',
                 'publisher'   => ['@id' => 'https://libix.tech/#organization'],
                 'potentialAction' => [
@@ -332,7 +332,7 @@ if (!isset($jsonLd)) {
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/>
                                         </svg>
-                                        Semua Artikel
+                                        Semua Blog
                                     </a>
                                 </div>
                             <?php else: ?>
@@ -413,8 +413,8 @@ if (!isset($jsonLd)) {
                         </span>
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed">
-                        blog.libix.tech adalah media informasi kuliner dan panduan bisnis F&B untuk pelaku UMKM Indonesia.
-                        Temukan wawasan, strategi, dan solusi digital untuk mengembangkan bisnis kuliner Anda.
+                        blog.libix.tech adalah blog resmi Libix Technology - startup teknologi yang menghadirkan solusi digital inovatif.
+                        Temukan wawasan, cerita inovasi, dan insight teknologi dari tim kami.
                     </p>
                 </div>
 

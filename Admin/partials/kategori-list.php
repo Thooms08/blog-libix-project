@@ -31,7 +31,7 @@ if (empty($kategoris)): ?>
         <div class="flex items-center gap-4 px-5 py-3 border-b border-cyber-border
                     bg-cyber-panel text-[10px] font-bold uppercase tracking-widest text-cyber-dim">
             <span class="flex-1">Nama Kategori</span>
-            <span class="hidden sm:block w-28 text-center">Jumlah Artikel</span>
+            <span class="hidden sm:block w-28 text-center">Jumlah Blog</span>
             <span class="hidden xs:block w-32 text-right">Dibuat</span>
             <span class="w-20 text-center">Aksi</span>
         </div>
@@ -77,7 +77,7 @@ if (empty($kategoris)): ?>
                                       d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586
                                          a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                             </svg>
-                            <?= $jumlah ?> artikel
+                            <?= $jumlah ?> blog
                         </span>
                     </div>
 

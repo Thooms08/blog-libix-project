@@ -183,7 +183,7 @@ $greeting = match(true) {
 
         <div class="relative z-10">
             <p class="text-3xl font-extrabold text-cyber-text tabular-nums"><?= formatNumber($totalViews) ?></p>
-            <p class="text-xs text-cyber-muted mt-1">Total views semua artikel</p>
+            <p class="text-xs text-cyber-muted mt-1">Total views semua blog</p>
         </div>
     </div>
 
@@ -200,12 +200,12 @@ $greeting = match(true) {
                              a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
             </div>
-            <span class="text-[10px] font-bold tracking-widest uppercase text-blue-400/70 bg-blue-500/10 px-2 py-1 rounded-lg">ARTIKEL</span>
+            <span class="text-[10px] font-bold tracking-widest uppercase text-blue-400/70 bg-blue-500/10 px-2 py-1 rounded-lg">BLOG</span>
         </div>
 
         <div class="relative z-10">
             <p class="text-3xl font-extrabold text-cyber-text tabular-nums"><?= number_format($totalBlog) ?></p>
-            <p class="text-xs text-cyber-muted mt-1">Total artikel dipublikasikan</p>
+            <p class="text-xs text-cyber-muted mt-1">Total blog dipublikasikan</p>
         </div>
     </div>
 
@@ -259,17 +259,17 @@ $greeting = match(true) {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
-     BARIS BAWAH: Artikel Terbaru + Top Views + Motivasi
+     BARIS BAWAH: Blog Terbaru + Top Views + Motivasi
 ════════════════════════════════════════════════════════════ -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
 
-    <!-- ── Artikel Terbaru (span 2 kolom) ────────────────── -->
+    <!-- ── Blog Terbaru (span 2 kolom) ────────────────── -->
     <div class="lg:col-span-2 bg-cyber-card border border-cyber-border rounded-2xl overflow-hidden">
         <!-- Header -->
         <div class="flex items-center justify-between px-5 py-4 border-b border-cyber-border">
             <div class="flex items-center gap-2.5">
                 <div class="w-1.5 h-5 rounded-full bg-cyber-orange" style="box-shadow: 0 0 8px #06b6d4"></div>
-                <h3 class="text-sm font-bold text-cyber-text">Artikel Terbaru</h3>
+                <h3 class="text-sm font-bold text-cyber-text">Blog Terbaru</h3>
             </div>
             <a href="/Admin/blog"
                class="text-[11px] text-cyber-muted hover:text-cyber-orange transition-colors flex items-center gap-1">

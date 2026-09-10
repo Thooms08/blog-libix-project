@@ -43,11 +43,11 @@ $title = $activeKat
 // ── Variabel SEO ──────────────────────────────────────────────────────────
 if ($activeKat) {
     // Halaman kategori
-    $metaDesc     = 'Temukan ' . $totalPosts . ' artikel terbaik tentang ' . $activeKat['nama']
-                  . ' di blog.libix.tech - wawasan, strategi, dan panduan bisnis kuliner untuk UMKM Indonesia.';
+    $metaDesc     = 'Temukan ' . $totalPosts . ' blog terbaru tentang ' . $activeKat['nama']
+                  . ' di blog.libix.tech - wawasan, inovasi teknologi, dan insight digital dari Libix Technology.';
     $metaKeywords = htmlspecialchars($activeKat['nama'])
-                  . ', blog kuliner, bisnis F&B Indonesia, UMKM kuliner, strategi restoran, manajemen kuliner, Libix Technology';
-    $ogTitle      = 'Artikel ' . $activeKat['nama'] . ' - blog.libix.tech';
+                  . ', blog teknologi, software development, AI, startup Indonesia, solusi digital, Libix Technology';
+    $ogTitle      = 'Blog ' . $activeKat['nama'] . ' - blog.libix.tech';
     $ogDesc       = $metaDesc;
     // OG image fallback: libix-logo (bukan og-default.jpg)
     $ogImage      = $appUrl . '/assets/libix-logo.png';
@@ -70,7 +70,7 @@ if ($activeKat) {
                 '@type'       => 'CollectionPage',
                 '@id'         => $canonicalUrl . '#webpage',
                 'url'         => $canonicalUrl,
-                'name'        => 'Artikel ' . $activeKat['nama'] . ' - blog.libix.tech',
+                'name'        => 'Blog ' . $activeKat['nama'] . ' - blog.libix.tech',
                 'description' => $metaDesc,
                 'inLanguage'  => 'id-ID',
                 'isPartOf'    => ['@id' => $appUrl . '/#website'],
@@ -93,7 +93,7 @@ if ($activeKat) {
                 '@id'         => $appUrl . '/#website',
                 'url'         => $appUrl . '/',
                 'name'        => 'blog.libix.tech',
-                'description' => 'Blog wawasan dan strategi bisnis kuliner untuk UMKM Indonesia.',
+                'description' => 'Blog wawasan, inovasi teknologi, dan solusi digital dari Libix Technology.',
                 'inLanguage'  => 'id-ID',
                 'publisher'   => ['@id' => 'https://libix.tech/#organization'],
             ],
@@ -101,12 +101,12 @@ if ($activeKat) {
     ];
 } else {
     // Halaman beranda
-    $metaDesc     = 'blog.libix.tech - wawasan, strategi bisnis, dan panduan manajemen operasional '
-                  . 'untuk pelaku UMKM kuliner Indonesia. Baca ' . $totalPosts . ' artikel terpilih tentang '
-                  . 'bisnis F&B, kasir digital, manajemen restoran, dan pertumbuhan kuliner.';
-    $metaKeywords = 'blog kuliner, bisnis F&B Indonesia, UMKM kuliner, strategi restoran, kasir digital, '
-                  . 'manajemen operasional kuliner, tips bisnis kuliner, Libix Technology';
-    $ogTitle      = 'blog.libix.tech - Wawasan & Strategi Bisnis Kuliner Indonesia';
+    $metaDesc     = 'blog.libix.tech - wawasan, insight teknologi, dan cerita inovasi digital '
+                  . 'dari Libix Technology. Baca ' . $totalPosts . ' blog terpilih tentang '
+                  . 'software development, AI, platform digital, dan solusi teknologi terkini.';
+    $metaKeywords = 'blog teknologi, software development, artificial intelligence, startup Indonesia, '
+                  . 'platform digital, solusi digital, inovasi teknologi, Libix Technology';
+    $ogTitle      = 'blog.libix.tech - Wawasan & Insight Teknologi dari Libix Technology';
     $ogDesc       = $metaDesc;
     $ogImage      = $appUrl . '/assets/libix-logo.png';
     $ogImageWidth  = 512;
@@ -131,7 +131,7 @@ if ($activeKat) {
                 'url'         => $appUrl . '/',
                 'name'        => 'blog.libix.tech',
                 'alternateName' => 'Blog Libix Technology',
-                'description' => 'Blog wawasan dan strategi bisnis kuliner untuk UMKM Indonesia.',
+                'description' => 'Blog wawasan, inovasi teknologi, dan solusi digital dari Libix Technology.',
                 'inLanguage'  => 'id-ID',
                 'publisher'   => ['@id' => 'https://libix.tech/#organization'],
                 'potentialAction' => [
@@ -144,13 +144,13 @@ if ($activeKat) {
                 '@type'       => 'WebPage',
                 '@id'         => $canonicalUrl . '#webpage',
                 'url'         => $canonicalUrl,
-                'name'        => 'blog.libix.tech - Wawasan & Strategi Bisnis Kuliner Indonesia',
+                'name'        => 'blog.libix.tech - Wawasan & Insight Teknologi dari Libix Technology',
                 'description' => $metaDesc,
                 'inLanguage'  => 'id-ID',
                 'isPartOf'    => ['@id' => $appUrl . '/#website'],
                 'about'       => [
                     '@type' => 'Thing',
-                    'name'  => 'Bisnis Kuliner & UMKM F&B Indonesia',
+                    'name'  => 'Teknologi, Software Development & Inovasi Digital Indonesia',
                 ],
                 'speakable'   => [
                     '@type'       => 'SpeakableSpecification',
@@ -183,36 +183,36 @@ ob_start();
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
-                Semua Artikel
+                Semua Blog
             </a>
             <span class="block text-brand-500 font-bold tracking-wider uppercase text-sm mb-2">Kategori</span>
             <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mt-1 mb-4">
                 <?= htmlspecialchars($activeKat['nama']) ?>
             </h1>
             <p class="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">
-                <?= $totalPosts ?> artikel dalam kategori <strong><?= htmlspecialchars($activeKat['nama']) ?></strong>.
+                <?= $totalPosts ?> blog dalam kategori <strong><?= htmlspecialchars($activeKat['nama']) ?></strong>.
             </p>
         <?php else: ?>
             <span class="text-brand-500 font-bold tracking-wider uppercase text-sm">blog.libix.tech</span>
             <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mt-2 mb-4">
-                Wawasan &amp; Strategi Bisnis Kuliner
+                Wawasan &amp; Insight Teknologi
             </h1>
             <p class="text-gray-600 max-w-2xl mx-auto text-base sm:text-lg">
-                Solusi digital, analisa bisnis, dan panduan manajemen operasional untuk Bisnis F&amp;B Indonesia.
+                Cerita inovasi, solusi digital, dan insight dari tim Libix Technology untuk Anda.
             </p>
         <?php endif; ?>
     </div>
 </section>
 
 <!-- ══════════════════════════════════════════════
-     5 ARTIKEL TERPOPULER (hanya saat filter kategori aktif & halaman 1)
+     5 BLOG TERPOPULER (hanya saat filter kategori aktif & halaman 1)
 ═══════════════════════════════════════════════ -->
 <?php if ($activeKat && !empty($topPosts) && $page === 1): ?>
 <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-2">
     <div class="flex items-center gap-3 mb-6">
         <div class="w-1 h-6 bg-brand-500 rounded-full flex-shrink-0"></div>
         <h2 class="text-xl font-extrabold text-gray-900">
-            5 Artikel Terpopuler di
+            5 Blog Terpopuler di
             <span class="text-brand-500"><?= htmlspecialchars($activeKat['nama']) ?></span>
         </h2>
     </div>
@@ -264,7 +264,7 @@ ob_start();
 <?php endif; ?>
 
 <!-- ══════════════════════════════════════════════
-     GRID ARTIKEL
+     GRID BLOG
 ═══════════════════════════════════════════════ -->
 <section class="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -272,7 +272,7 @@ ob_start();
         <div class="flex items-center gap-3 mb-6">
             <div class="w-1 h-6 bg-gray-300 rounded-full flex-shrink-0"></div>
             <h2 class="text-xl font-extrabold text-gray-900">
-                Semua Artikel | <?= htmlspecialchars($activeKat['nama']) ?>
+                Semua Blog | <?= htmlspecialchars($activeKat['nama']) ?>
             </h2>
         </div>
     <?php endif; ?>
@@ -288,7 +288,7 @@ ob_start();
              PAGINASI
         ════════════════════════════════════════ -->
         <?php if ($totalPages > 1): ?>
-        <nav class="mt-12 flex items-center justify-center gap-1.5 flex-wrap" aria-label="Paginasi artikel">
+        <nav class="mt-12 flex items-center justify-center gap-1.5 flex-wrap" aria-label="Paginasi blog">
 
             <?php
             // Tombol Prev
@@ -360,7 +360,7 @@ ob_start();
         <!-- Info halaman -->
         <p class="mt-4 text-center text-xs text-gray-400">
             Halaman <?= $page ?> dari <?= $totalPages ?>
-            (<?= $totalPosts ?> artikel)
+            (<?= $totalPosts ?> blog)
         </p>
         <?php endif; ?>
 
@@ -375,7 +375,7 @@ ob_start();
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
-                Lihat Semua Artikel
+                Lihat Semua Blog
             </a>
         </div>
     <?php endif; ?>

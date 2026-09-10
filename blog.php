@@ -21,8 +21,8 @@ $post = $blogLogic->getBySlug($slug);
 
 if ($post === null) {
     $errorCode    = 404;
-    $errorTitle   = 'Artikel Tidak Ditemukan';
-    $errorMessage = 'Artikel "' . htmlspecialchars($slug) . '" tidak ada, sudah dihapus, atau URL-nya salah. Coba cari di halaman beranda.';
+    $errorTitle   = 'Blog Tidak Ditemukan';
+    $errorMessage = 'Blog "' . htmlspecialchars($slug) . '" tidak ada, sudah dihapus, atau URL-nya salah. Coba cari di halaman beranda.';
     require __DIR__ . '/error.php';
     exit();
 }
@@ -50,7 +50,7 @@ $metaDesc = mb_strlen($_rawDesc) > 160
     ? mb_substr($_rawDesc, 0, 157) . '...'
     : $_rawDesc;
 
-// Keywords: gabungan kategori + long-tail bisnis kuliner
+// Keywords: gabungan kategori + long-tail teknologi
 $_katNames    = array_column($post['categories'] ?? [], 'nama');
 $_baseKeywords = ['blog teknologi', 'software development', 'startup teknologi Indonesia',
                   'artificial intelligence', 'platform digital', 'solusi digital', 'Libix Technology'];
@@ -72,7 +72,7 @@ $ogImageHeight = !empty($post['image']) ? 630  : 512;
 $articlePublishedTime = date('c', strtotime($post['createdAt']));
 $articleModifiedTime  = date('c', strtotime($post['updatedAt'] ?? $post['createdAt']));
 $articleAuthor        = $post['author_name'] ?? 'Tim Redaksi blog.libix.tech';
-$articleSection       = !empty($_katNames) ? $_katNames[0] : 'Kuliner';
+$articleSection       = !empty($_katNames) ? $_katNames[0] : 'Teknologi';
 
 // ── Hitung reading time & word count (untuk AEO / GEO) ───────────────────
 $_plainContent  = strip_tags($post['content'] ?? '');
@@ -357,7 +357,7 @@ ob_start();
                              3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684
                              3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
                 </svg>
-                <span id="btnShareLabel">Bagikan Artikel</span>
+                <span id="btnShareLabel">Bagikan Blog</span>
             </button>
 
             <!-- Indikator "Link disalin!" -->
@@ -950,7 +950,7 @@ ob_start();
             toastTimer = setTimeout(() => {
                 toast.classList.add('hidden');
                 toast.classList.remove('inline-flex');
-                btnLabel.textContent = 'Bagikan Artikel';
+                btnLabel.textContent = 'Bagikan Blog';
             }, 3000);
         }
 

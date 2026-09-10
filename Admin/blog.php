@@ -154,7 +154,7 @@ ob_start();
 
     window.confirmDelete = function (id, title) {
         Swal.fire({
-            title: 'Hapus Artikel?',
+            title: 'Hapus Blog?',
             html : `<span style="color:#94a3b8;font-size:.875rem">Artikel <strong style="color:#e2e8f0">"${title}"</strong> akan dihapus permanen dan tidak bisa dikembalikan.</span>`,
             icon : 'warning',
 
