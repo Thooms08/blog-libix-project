@@ -43,21 +43,26 @@ if (empty($posts)): ?>
                 $date    = date('d M Y', strtotime($post['createdAt']));
                 $imgSrc  = !empty($post['image']) ? htmlspecialchars($post['image'], ENT_QUOTES, 'UTF-8') : '';
             ?>
-                <div class="blog-row grid grid-cols-[2fr_1fr_120px_96px] gap-4 px-5 py-3.5
+                <div class="blog-row grid grid-cols-[2fr_1fr_120px_96px] gap-4 px-5 py-3
                             items-center hover:bg-cyber-orange/[0.04] transition-colors group
                             <?= $i >= 30 ? 'hidden extra-blog-row' : '' ?>"
                      data-id="<?= $id ?>"
                      data-title="<?= $title ?>">
 
                     <!-- Judul + thumbnail -->
-                    <div class="flex items-center gap-3 min-w-0">
-                        <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-cyber-panel border border-cyber-border">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <div class="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-cyber-panel border border-cyber-border"
+                             style="min-width:2.5rem;min-height:2.5rem;max-width:2.5rem;max-height:2.5rem;">
                             <?php if ($imgSrc): ?>
-                                <img src="<?= $imgSrc ?>" alt="" class="w-full h-full object-cover" loading="lazy"
-                                     onerror="this.parentElement.innerHTML='<div class=\'w-full h-full flex items-center justify-center\'><svg class="w-8 h-8 text-cyber-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg></div>'">
+                                <img src="<?= $imgSrc ?>" alt="" loading="lazy"
+                                     style="width:100%;height:100%;object-fit:cover;display:block;"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;">
+                                    <svg class="w-4 h-4 text-cyber-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
                             <?php else: ?>
                                 <div class="w-full h-full flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-cyber-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <svg class="w-4 h-4 text-cyber-dim" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -70,12 +75,12 @@ if (empty($posts)): ?>
                     </div>
 
                     <!-- Kategori -->
-                    <div class="min-w-0">
-                        <p class="text-xs text-cyber-muted line-clamp-2"><?= $katName ?></p>
+                    <div class="min-w-0 self-center">
+                        <p class="text-xs text-cyber-muted line-clamp-1"><?= $katName ?></p>
                     </div>
 
                     <!-- Views -->
-                    <div class="text-center">
+                    <div class="text-center self-center">
                         <span class="inline-flex items-center gap-1 text-xs font-bold tabular-nums text-cyber-text
                                      bg-cyber-panel border border-cyber-border rounded-lg px-2.5 py-1">
                             <svg class="w-3 h-3 text-cyber-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +95,7 @@ if (empty($posts)): ?>
                     </div>
 
                     <!-- Aksi -->
-                    <div class="flex items-center justify-center gap-1.5">
+                    <div class="flex items-center justify-center gap-1.5 self-center">
                         <a href="/Admin/blog-detail?slug=<?= htmlspecialchars($post['slug'], ENT_QUOTES, 'UTF-8') ?>"
                            title="Edit artikel"
                            class="w-8 h-8 flex items-center justify-center rounded-lg border border-cyber-border
@@ -136,9 +141,10 @@ if (empty($posts)): ?>
                  data-title="<?= $title ?>">
 
                 <?php if ($imgSrc): ?>
-                    <div class="h-36 bg-cyber-panel overflow-hidden">
+                    <div class="w-full aspect-video bg-cyber-panel overflow-hidden flex-shrink-0">
                         <img src="<?= $imgSrc ?>" alt="<?= $title ?>"
-                             class="w-full h-full object-cover" loading="lazy">
+                             class="w-full h-full object-cover" loading="lazy"
+                             onerror="this.parentElement.style.display='none'">
                     </div>
                 <?php endif; ?>
 
