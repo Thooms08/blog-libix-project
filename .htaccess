@@ -33,12 +33,17 @@ RewriteRule ^layouts/         - [F,L]
 RewriteRule ^partials/        - [F,L]
 RewriteRule ^Admin/partials/  - [F,L]
 
-# ── 5. Blokir config.php, router.php, dan sitemap.php dari akses langsung ────
-#    sitemap.php hanya boleh diakses via rewrite /sitemap.xml di bawah.
-<FilesMatch "^(config|router|sitemap)\.php$">
+# ── 5. Blokir config.php dan router.php dari akses langsung ──────────────────
+#    sitemap.php TIDAK diblokir di sini karena perlu diakses via rewrite internal.
+#    Akses langsung ke sitemap.php dicegah lewat kondisi ENV di bawah.
+<FilesMatch "^(config|router)\.php$">
     Order allow,deny
     Deny from all
 </FilesMatch>
+
+# Blokir akses langsung ke sitemap.php — tapi izinkan rewrite internal
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteRule ^sitemap\.php$ - [F,L]
 
 # ── 5b. Izinkan eksplisit file PWA / manifest & error handler ────────────────
 <FilesMatch "^(site\.webmanifest|browserconfig\.xml|error\.php)$">
